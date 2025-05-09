@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Page Title</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap"
+        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,100..900;1,100..900&display=swap"
+        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,100..900;1,100..900&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="svg.css">
+    <link rel="stylesheet" href="header.css">
+    <link rel="stylesheet" href="login.css">
+</head>
+
+<body>
+    <header class="header-top">
+        <a href="/" style="all: unset; cursor: pointer;">
+            <img src="logo.svg" class="logo" />
+            <svg style="margin-left: 10px; margin-right: 5px;" width="25" xmlns="http://www.w3.org/2000/svg"
+                class="home" viewBox="0 -960 960 960">
+                <path
+                    d="M480-819q-11 0-21.5 3.5T440-804L140-538q-10 8-15 20t-5 25v313q0 25 17.5 42.5T180-120h600q25 0 42.5-17.5T840-180v-313q0-13-5-24.5T820-538L520-804q-8-8-18.5-11.5T480-819z"
+                    fill="none" stroke="var(--coral)" stroke-width="150" />
+            </svg>
+        </a>
+
+        <nav>
+            <a href="/services" class="stop" onclick="services()">Services</a>
+            <a href="/clients" class="stop" onclick="clients()">Clients</a>
+            <a href="/projects" class="stop" onclick="projects()">Projects</a>
+            <a href="/sacredbranding" class="stop" onclick="sacredbranding()">Sacred Branding</a>
+        </nav>
+
+        <a href="/about" class="ct">Let’s Talk</a>
+        <a href="/login" class="sn stop" onclick="login();">Sign In</a>
+
+    </header>
+    <%- include('login') %>
+        <script>
+            window.addEventListener('scroll', () => {
+                const header = document.querySelector('header');
+                if (!header) return;
+                if (window.scrollY > 0) {
+                    header.className = 'header-active';
+                } else {
+                    header.className = 'header-top';
+                }
+            });
+
+        </script>

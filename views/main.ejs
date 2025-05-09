@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Services Management</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container mt-4">
+        <h1>Services Management</h1>
+        
+        <div id="alert" class="alert d-none mt-3"></div>
+        
+        <button class="btn btn-primary mb-3" id="openAddModal">Add New Service</button>
+        
+        <div class="d-flex justify-content-center">
+            <div class="spinner-border text-primary d-none" id="loader" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+        </div>
+        
+        <div class="table-responsive">
+            <table class="table table-striped table-hover">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Description</th>
+                        <th>Rate ($)</th>
+                        <th>Duration (min)</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="servicesTableBody">
+                    <!-- Service data will be inserted here -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+    <!-- Add/Edit Service Modal -->
+    <div class="modal fade" id="serviceModal" tabindex="-1" aria-labelledby="serviceModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalTitle">Add New Service</h5>
+                    <button type="button" class="btn-close" id="closeModal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="serviceForm">
+                        <input type="hidden" id="serviceId">
+                        
+                        <div class="mb-3">
+                            <label for="name" class="form-label">Service Name:</label>
+                            <input type="text" class="form-control" id="name" required>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="description" class="form-label">Description:</label>
+                            <textarea class="form-control" id="description" rows="3" required></textarea>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="rate" class="form-label">Rate ($):</label>
+                            <input type="number" class="form-control" id="rate" min="0" step="0.01" required>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="duration" class="form-label">Duration (minutes):</label>
+                            <input type="number" class="form-control" id="duration" min="1" required>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="status" class="form-label">Status:</label>
+                            <select class="form-select" id="status" required>
+                                <option value="Active">Active</option>
+                                <option value="Inactive">Inactive</option>
+                                <option value="Pending">Pending</option>
+                            </select>
+                        </div>
+                        
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary" id="submitBtn">Save Service</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Delete Confirmation Modal -->
+    <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Confirm Deletion</h5>
+                    <button type="button" class="btn-close" id="closeDeleteModal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Are you sure you want to delete this service? This action cannot be undone.</p>
+                    <input type="hidden" id="deleteServiceId">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" id="cancelDelete">Cancel</button>
+                    <button type="button" class="btn btn-danger" id="confirmDelete">Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        // API base URL - change this to match your API endpoint
+        const API_BASE_URL = '/api/services';
+        
+        // Bootstrap Modal instances
+        let serviceModalInstance;
+        let deleteModalInstance;
+        
+        // DOM Elements
+        const servicesTableBody = document.getElementById('servicesTableBody');
+        const serviceModal = document.getElementById('serviceModal');
+        const deleteModal = document.getElementById('deleteModal');
+        const serviceForm = document.getElementById('serviceForm');
+        const modalTitle = document.getElementById('modalTitle');
+        const loader = document.getElementById('loader');
+        const alertDiv = document.getElementById('alert');
+        
+        // Modal form elements
+        const serviceIdInput = document.getElementById('serviceId');
+        const nameInput = document.getElementById('name');
+        const descriptionInput = document.getElementById('description');
+        const rateInput = document.getElementById('rate');
+        const durationInput = document.getElementById('duration');
+        const statusInput = document.getElementById('status');
+        
+        // Button elements
+        const openAddModalBtn = document.getElementById('openAddModal');
+        const closeModalBtn = document.getElementById('closeModal');
+        const closeDeleteModalBtn = document.getElementById('closeDeleteModal');
+        const cancelDeleteBtn = document.getElementById('cancelDelete');
+        const confirmDeleteBtn = document.getElementById('confirmDelete');
+        const deleteServiceIdInput = document.getElementById('deleteServiceId');
+        
+        // Initialize Bootstrap modals
+        document.addEventListener('DOMContentLoaded', function() {
+            serviceModalInstance = new bootstrap.Modal(serviceModal);
+            deleteModalInstance = new bootstrap.Modal(deleteModal);
+            loadServices();
+        });
+        
+        // Event Listeners
+        openAddModalBtn.addEventListener('click', openAddModal);
+        closeModalBtn.addEventListener('click', closeModal);
+        closeDeleteModalBtn.addEventListener('click', closeDeleteModal);
+        cancelDeleteBtn.addEventListener('click', closeDeleteModal);
+        confirmDeleteBtn.addEventListener('click', deleteService);
+        serviceForm.addEventListener('submit', handleFormSubmit);
+        
+        // Functions
+        
+        // Show loading indicator
+        function showLoader() {
+            loader.classList.remove('d-none');
+        }
+        
+        // Hide loading indicator
+        function hideLoader() {
+            loader.classList.add('d-none');
+        }
+        
+        // Show alert message
+        function showAlert(message, type) {
+            alertDiv.textContent = message;
+            alertDiv.className = `alert alert-${type}`;
+            alertDiv.classList.remove('d-none');
+            
+            // Auto hide after 5 seconds
+            setTimeout(() => {
+                alertDiv.classList.add('d-none');
+            }, 5000);
+        }
+        
+        // Load all services from the API
+        async function loadServices() {
+            try {
+                showLoader();
+                const response = await fetch(API_BASE_URL);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+                
+                const services = await response.json();
+                displayServices(services);
+            } catch (error) {
+                console.error('Error loading services:', error);
+                showAlert('Failed to load services. Please try again.', 'danger');
+            } finally {
+                hideLoader();
+            }
+        }
+        
+        // Display services in the table
+        function displayServices(services) {
+            servicesTableBody.innerHTML = '';
+            
+            if (services.length === 0) {
+                const noDataRow = document.createElement('tr');
+                noDataRow.innerHTML = '<td colspan="7" class="text-center">No services found</td>';
+                servicesTableBody.appendChild(noDataRow);
+                return;
+            }
+            
+            services.forEach(service => {
+                const row = document.createElement('tr');
+                
+                row.innerHTML = `
+                    <td>${service.id}</td>
+                    <td>${service.name}</td>
+                    <td>${service.description}</td>
+                    <td>$${parseFloat(service.rate).toFixed(2)}</td>
+                    <td>${service.duration}</td>
+                    <td>${service.status}</td>
+                    <td>
+                        <button class="btn btn-sm btn-success edit-btn" data-id="${service.id}">Edit</button>
+                        <button class="btn btn-sm btn-danger delete-btn" data-id="${service.id}">Delete</button>
+                    </td>
+                `;
+                
+                servicesTableBody.appendChild(row);
+            });
+            
+            // Add event listeners to action buttons
+            document.querySelectorAll('.edit-btn').forEach(button => {
+                button.addEventListener('click', (e) => openEditModal(e.target.dataset.id));
+            });
+            
+            document.querySelectorAll('.delete-btn').forEach(button => {
+                button.addEventListener('click', (e) => openDeleteModal(e.target.dataset.id));
+            });
+        }
+        
+        // Open modal for adding a new service
+        function openAddModal() {
+            modalTitle.textContent = 'Add New Service';
+            serviceForm.reset();
+            serviceIdInput.value = '';
+            serviceModalInstance.show();
+        }
+        
+        // Open modal for editing an existing service
+        async function openEditModal(id) {
+            try {
+                showLoader();
+                modalTitle.textContent = 'Edit Service';
+                
+                const response = await fetch(`${API_BASE_URL}/${id}`);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+                
+                const service = await response.json();
+                
+                // Populate form fields
+                serviceIdInput.value = service.id;
+                nameInput.value = service.name;
+                descriptionInput.value = service.description;
+                rateInput.value = service.rate;
+                durationInput.value = service.duration;
+                statusInput.value = service.status;
+                
+                serviceModalInstance.show();
+            } catch (error) {
+                console.error('Error loading service details:', error);
+                showAlert('Failed to load service details.', 'danger');
+            } finally {
+                hideLoader();
+            }
+        }
+        
+        // Close the service modal
+        function closeModal() {
+            serviceModalInstance.hide();
+        }
+        
+        // Open delete confirmation modal
+        function openDeleteModal(id) {
+            deleteServiceIdInput.value = id;
+            deleteModalInstance.show();
+        }
+        
+        // Close delete confirmation modal
+        function closeDeleteModal() {
+            deleteModalInstance.hide();
+        }
+        
+        // Handle form submission (add or edit)
+        async function handleFormSubmit(e) {
+            e.preventDefault();
+            
+            const serviceData = {
+                name: nameInput.value,
+                description: descriptionInput.value,
+                rate: parseFloat(rateInput.value),
+                duration: parseInt(durationInput.value),
+                status: statusInput.value
+            };
+            
+            const id = serviceIdInput.value;
+            const isEdit = !!id;
+            
+            try {
+                showLoader();
+                
+                let response;
+                if (isEdit) {
+                    // Update existing service
+                    response = await fetch(`${API_BASE_URL}/${id}`, {
+                        method: 'PUT',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(serviceData)
+                    });
+                } else {
+                    // Create new service
+                    response = await fetch(API_BASE_URL, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(serviceData)
+                    });
+                }
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+                
+                closeModal();
+                loadServices();
+                showAlert(`Service ${isEdit ? 'updated' : 'created'} successfully!`, 'success');
+            } catch (error) {
+                console.error(`Error ${isEdit ? 'updating' : 'creating'} service:`, error);
+                showAlert(`Failed to ${isEdit ? 'update' : 'create'} service.`, 'danger');
+            } finally {
+                hideLoader();
+            }
+        }
+        
+        // Delete a service
+        async function deleteService() {
+            const id = deleteServiceIdInput.value;
+            
+            try {
+                showLoader();
+                
+                const response = await fetch(`${API_BASE_URL}/${id}`, {
+                    method: 'DELETE'
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+                
+                closeDeleteModal();
+                loadServices();
+                showAlert('Service deleted successfully!', 'success');
+            } catch (error) {
+                console.error('Error deleting service:', error);
+                showAlert('Failed to delete service.', 'danger');
+            } finally {
+                hideLoader();
+            }
+        }
+    </script>
+</body>
+</html>

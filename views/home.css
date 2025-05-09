@@ -1,0 +1,146 @@
+.intro {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    margin-top: 100px;
+}
+
+.intro div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 60px;
+    margin-top: 30px;
+    font-size: 20px;
+    color: var(--gray);
+}
+
+
+
+/***************************************************/
+
+
+
+
+.slider-track {
+    display: flex;
+    overflow: hidden;
+    scroll-behavior: smooth;
+    justify-content: center;
+    position: relative;
+    width: 100%;
+    margin-bottom: 35px;
+}
+
+.single-prjct {
+    width: 400px;
+    height: 280px;
+    margin: 30px;
+    flex-shrink: 0;
+    transition: all 0.5s ease;
+    opacity: 1;
+    border-radius: 20px;
+    position: relative;
+    overflow: hidden;
+}
+
+.arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: var(--btn-height);
+    height: var(--btn-height);
+    background-color: 
+color-mix(in srgb, var(--coral) 77%, transparent);
+    border-radius: 50%;
+    cursor: pointer;
+    z-index: 10;
+    padding: 9px;
+    border: 2px solid var(--coral);
+    box-shadow: 0 0px 0px 2px 
+color-mix(in srgb, var(--coral) 77%, transparent);
+}
+
+.shrunk {
+    min-width: 0 !important;
+    width: 0 !important;
+    margin: 0 !important;
+    opacity: 0 !important;
+    padding: 0 !important;
+}
+
+.wrapped {
+    flex-wrap: wrap;
+}
+
+.prjct-title {
+}
+
+#projects {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.single-prjct {
+    transition: all 0.5s ease;
+    cursor: pointer;
+    color: var(--white);
+    padding: 25px;
+    text-align: center;
+    line-height: 40px;
+    background-size: cover;
+    background-position: center;
+
+}
+
+.single-prjct * {
+    z-index: 3;
+    position: relative;
+    transition: all 0.7s ease;
+    opacity: 0;
+}
+
+.single-prjct:hover * {
+    opacity: 1;
+}
+
+.single-prjct::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    
+    transition: all 0.7s ease;
+    cursor: pointer;
+}
+
+.single-prjct:hover::before {
+    background-color: color-mix(in srgb, var(--gray) 50%, transparent);
+}
+
+
+
+/****************************************************/
+
+
+.srvc-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 60px;
+    justify-content: center;
+    overflow: hidden;
+    height: 700px;
+    transition: height 0.5s ease;
+    margin: 30px;
+}
+
+.srvc-container img {
+    width: 240px;
+    height: 180px;
+    object-fit: cover;
+}

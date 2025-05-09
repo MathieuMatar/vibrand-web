@@ -1,0 +1,231 @@
+:root {
+    --background-color: #F5F5F5;
+    --text-color: #333;
+    --coral: #DB5349;
+    --gray: #383E42;
+    --black: #000000;
+    --white: #F5F5F5;
+    --font-family: 'Arial', sans-serif;
+    --btn-height: 36px;
+    --btn-radius: 25px;
+    --btn-padding: 6px 15px;
+    --btn-border: 1.5px solid var(--black);
+    --btn-font-size: 16px;
+}
+
+header {
+    background-color: var(--coral);
+    border-top-right-radius: 25px;
+    border-bottom-right-radius: 25px;
+    padding-left: 20px;
+    padding-top: 20px;
+}
+
+a {
+    padding: 6px 10px;
+    height: 45px;
+    border-top-left-radius: 25px;
+    border-bottom-left-radius: 25px;
+    font-size: 16px;
+    cursor: pointer;
+    background-color: j;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+a:hover {
+    background-color: #f0f0f0;
+}
+
+nav {
+    padding: 6px 15px;
+    height: 36px;
+    border-radius: 25px;
+    font-size: 16px;
+    cursor: pointer;
+    background-color: white;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+
+header svg {
+    width: 27px;
+    height: 27px;
+}
+
+header img.logo {
+    width: 100px;
+    height: 38px;
+    object-fit: cover;
+    object-position: 0 -10px;
+}
+
+header a span {
+    max-width: 0;
+    overflow: hidden;
+    transition: max-width 0.5s ease;
+}
+
+header:hover a span {
+    max-width: 400px;
+}
+
+.name {
+    max-width: 0;
+    overflow: hidden;
+    transition: max-width 0.5s ease;
+}
+
+
+
+.logo {
+    max-width: 0;
+}
+
+
+
+header:hover .logo {
+    max-width: 200px;
+    transition: max-width 0.5s ease;
+
+}
+
+header:hover .home {
+    display: none;
+}
+
+header:hover .name {
+    max-width: 200px;
+
+}
+
+body {
+    background: linear-gradient(143deg, #e3e5e6 3%, #fbecb8 52%, #f2e7cc 155%);
+    padding: 15px;
+    display: flex;
+    gap: 15px;
+    padding-left: 0;
+    margin: 0;
+}
+
+.parent {
+    width: 100%;
+    height: 100%;
+}
+
+.div4,
+.div5,
+.div6 {
+    background-color: #fbfaf6ab;
+    border-radius: 35px;
+    overflow: hidden;
+}
+
+.parent {
+    display: grid;
+    grid-template-columns: 3fr 1fr;
+    grid-template-rows: 2fr 4fr 3fr 16fr;
+    grid-column-gap: 15px;
+    grid-row-gap: 15px;
+}
+
+.div1 {
+    grid-area: 1 / 1 / 2 / 2;
+    font-size: 35px;
+}
+
+.div2 {
+    grid-area: 1 / 2 / 2 / 3;
+    display: flex;
+    gap: 5px;
+    align-items: center;
+}
+
+.div2 .btn {
+    background-color: transparent;
+    border-color: var(--coral);
+    color: var(--coral);
+}
+
+.div2 .btn:hover {
+    background-color: var(--coral);
+    color: white;
+}
+
+.div3 {
+    grid-area: 2 / 1 / 3 / 2;
+    overflow: hidden;
+}
+
+.div4 {
+    grid-area: 3 / 1 / 5 / 2;
+    overflow: hidden;
+
+}
+
+.div4 iframe {
+    border: none;
+    height: 100%;
+    width: 100%;
+
+}
+
+.div5 {
+    grid-area: 2 / 2 / 4 / 3;
+}
+
+.div6 {
+    grid-area: 4 / 2 / 5 / 3;
+}
+
+
+
+.milestones {
+    display: flex;
+    gap: 60px;
+    position: relative;
+    width: fit-content;
+    font-size: 10px;
+    margin: 0 auto;
+    overflow: hidden;
+}
+
+.milestones::before {
+    content: '';
+    width: 50%;
+    background: var(--coral);
+    position: absolute;
+    height: 7px;
+    top: 50%;
+    transform: translateY(-50%);
+    margin: 0 20px;
+    z-index: 1;
+    border-radius: 100px;
+
+}
+
+.milestones::after {
+    content: '';
+    width: -webkit-fill-available;
+    background: var(--gray);
+    position: absolute;
+    height: 5px;
+    top: 50%;
+    transform: translateY(-50%);
+    margin: 0 20px;
+
+}
+
+.milestones div {
+    border: 7px solid var(--coral);
+    height: 110px;
+    width: 110px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2;
+    background: #fbfaf6;
+}

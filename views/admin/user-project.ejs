@@ -1,0 +1,56 @@
+<main class="parent">
+    <div class="div1">
+        <%= project.name %>
+    </div>
+    <div class="div2">
+        <button class="btn" onclick="document.getElementById('frame').src='https://husj.vibrandstudio.com/'">Overview</button>
+        <button class="btn" onclick="document.getElementById('frame').src='https://drive.google.com'">Files</button>
+        <button class="btn" onclick="document.getElementById('frame').src='http://localhost:3002/'">Info</button>
+    </div>
+    <div class="div3">
+        <div class="milestones">
+            <% project.Milestones.forEach(milestone => { 
+                const isCompleted = milestone.status === 'Completed';
+                const formattedDate = new Date(milestone.due_date).toLocaleDateString('en-GB', {
+                    day: '2-digit',
+                    month: 'short'
+                });
+           %>
+               <div class="mls" 
+                    title="<%= milestone.description %>" 
+                    style="<%= isCompleted ? 'border-color: var(--gray); border-width: 5px;' : '' %>">
+                   <%= milestone.name %><br>
+                   <%= formattedDate %>
+               </div>
+           <% }); %>
+        </div>
+    </div>
+    <div class="div4">
+        <iframe id="frame" src="https://husj.vibrandstudio.com/" style="border: none;"></iframe>
+    </div>
+    <div class="div5" style="font-size: 10px;"> 
+        <%= project.description %><br>
+        <%= project.client_id %><br>
+        <%= project.start_date %><br>
+        <%= project.deadline %><br>
+        <%= project.status %><br>
+        <%= project.overview %><br>
+        employee<br>
+        <% //project.user.forEach(employee => { %>
+            <%= //employee.first_name %><br>
+            <%= //employee.last_name %><br>
+            <%// }); %>
+            contacts
+            <% //project.Contacts.forEach(contact => { %>
+                <%= //contact.name %><br>
+                <% //}); %>
+                services
+                <% project.Services.forEach(service => { %>
+                    <%= service.name %><br>
+                <% }); %>
+
+    </div>
+    <div class="div6">
+        <iframe src="/user/<%= id %>/project/<%= project.id %>/task" style="border: none; width: 100%; height: 100%;"></iframe>
+    </div>
+</main>
