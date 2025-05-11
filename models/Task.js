@@ -58,10 +58,6 @@ Task.init(
                 key: 'id',
             },
         },
-        completed: {
-            type: DataTypes.ENUM('Y', 'N', 'C'),
-            allowNull: false,
-        },
         due_date: {
             type: DataTypes.DATEONLY,
             allowNull: true,

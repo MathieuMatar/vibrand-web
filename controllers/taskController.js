@@ -123,8 +123,9 @@ class TaskController {
 
     static async createTask(req, res) {
         try {
-            const { type, projectId, created_by, assigned_to, completed_by, dueDate, taskDescription, importanceLevel } = req.body;
-            const newTask = await taskService.createTask(type, projectId, created_by, assigned_to, completed_by, dueDate, taskDescription, importanceLevel);
+            const { type, project_id, created_by, assigned_to, completed_by, due_date, task_description, importance_level } = req.body;
+            console.log("hello2");
+            const newTask = await taskService.createTask( type, project_id, created_by, assigned_to, completed_by, due_date, task_description, importance_level);
             res.status(201).json(newTask);
         } catch (error) {
             console.error("Error creating task:", error);
@@ -135,8 +136,8 @@ class TaskController {
     static async updateTask(req, res) {
         try {
             const { id } = req.params;
-            const { type, projectId, created_by, assigned_to, completed_by, dueDate, taskDescription, importanceLevel } = req.body;
-            const updatedTask = await taskService.updateTask(id, type, projectId, created_by, assigned_to, completed_by, dueDate, taskDescription, importanceLevel);
+            const {  type, project_id, created_by, assigned_to, completed_by, due_date, task_description, importance_level} = req.body;
+            const updatedTask = await taskService.updateTask(id, type, project_id, created_by, assigned_to, completed_by, due_date, task_description, importance_level);
             if (!updatedTask) {
                 return res.status(404).json({ error: "Task not found" });
             }

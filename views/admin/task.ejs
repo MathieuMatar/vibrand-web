@@ -1,0 +1,154 @@
+<head>
+  <title>Tasks</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/style.css">
+</head>
+<style>
+  body {
+    font-size: 13;
+  }
+
+  .btn {
+    margin: 15px;
+    width: min-content;
+    color: var(--coral);
+    border-color: var(--coral);
+  }
+
+  .btn:hover {
+    background-color: var(--coral);
+    color: white;
+  }
+  
+  #single-task {
+    padding: 25px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  #task_description {
+    padding: 10px;
+    outline: none;
+  }
+
+  #due_date, #assigned_to, #importance {
+    border: 1px solid var(--coral);
+    border-radius: 6px;
+    padding: 12px 15px;
+    cursor: pointer;
+  }
+
+  .task-info {
+    margin-top: 20px;
+    padding: 15px;
+    background-color: var(--coral);
+    border-radius: 8px;
+  }
+
+  .submit-button {
+    align-self: flex-end;
+    margin-top: 10px;
+  }
+
+  #single-task label input+svg {
+    border-radius: 50%;
+    padding: 5px;
+    fill: var(--coral);
+    border: 1.5px solid var(--coral);
+    cursor: pointer;
+  }
+
+  #single-task input:checked+svg {
+    background-color: var(--coral);
+    fill: var(--white);
+  }
+</style>
+<div id="single-task">
+  <a href="http://localhost:3002/user/<%= user %>/project/<%= project %>/task" class="btn">Back</a>
+  <div id="type">
+    <label>
+      <input type="radio" name="type" value="task" id="task" style="display: none;" <%=task.type==='task'
+                ? 'checked' : '' %>>
+      <svg xmlns="http://www.w3.org/2000/svg" height="35px" viewBox="0 -960 960 960" width="35px">
+        <path d="m438-240 226-226-58-58-169 169-84-84-57 57 142 142ZM240-80q-33 0-56.5-23.5T160-160v-640q0-33 23.5-56.5T240-880h320l240 240v480q0 33-23.5 56.5T720-80H240Zm280-520v-200H240v640h480v-440H520ZM240-800v200-200 640-640Z" />
+      </svg>
+    </label>
+    <label>
+      <input type="radio" name="type" value="note" id="note" style="display: none;" <%=task.type==='note'
+                ? 'checked' : '' %>>
+      <svg xmlns="http://www.w3.org/2000/svg" height="35px" viewBox="0 -960 960 960" width="35px">
+        <path d="M280-280h280v-80H280v80Zm0-160h400v-80H280v80Zm0-160h400v-80H280v80Zm-80 480q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h560q33 0 56.5 23.5T840-760v560q0 33-23.5 56.5T760-120H200Zm0-80h560v-560H200v560Zm0-560v560-560Z" />
+      </svg>
+    </label>
+  </div>
+  <div contenteditable="true" id="task_description" name="task_description">
+    <%=task.task_description%>
+  </div>
+  <input type="date" id="due_date" name="due_date" value="<%=task.due_date%>">
+  <input type="number" id="assigned_to" name="assigned_to" value="<%=task.assigned_to%>">
+  <select name="importance" id="importance">
+    <option value="Critical" <%=task.importance_level==='Critical' ? 'selected' : '' %>>Critical</option>
+    <option value="High" <%=task.importance_level==='High' ? 'selected' : '' %>>High</option>
+    <option value="Medium" <%=task.importance_level==='Medium' ? 'selected' : '' %>>Medium</option>
+    <option value="Low" <%=task.importance_level==='Low' ? 'selected' : '' %>>Low</option>
+    <option value="Optional" <%=task.importance_level==='Optional' ? 'selected' : '' %>>Optional</option>
+  </select>
+
+  <div class="task-info">
+    <%=task.updatedAt%><br>
+    assigned by <%=task.created_by%>
+  </div>
+  <button class="submit-button btn" onclick="submit()">done</button>
+</div>
+
+
+<script>
+  function submit() {
+    const taskData = {
+      id: parseInt('<%= task.id %>', 10),
+      type: document.querySelector('input[name="type"]:checked').value,
+      project_id: parseInt("<%= task.project_id %>", 10),
+      created_by: parseInt("<%= task.created_by %>", 10),
+      assigned_to: parseInt(document.querySelector('#assigned_to').value, 10),
+      completed_by: parseInt('<%= task.completed_by %>', 10),
+      due_date: document.querySelector('#due_date').value,
+      task_description: document.querySelector('#task_description').textContent.trim(),
+      importance_level: document.querySelector('#importance').value,
+    };
+    console.log('Task data collected:', taskData);
+    updateTask(taskData).then(data => console.log('Updated task:', data));
+    window.location.href = `http://localhost:3002/user/<%= user %>/project/<%= project %>/task`;
+  }
+
+  async function updateTask(taskData) {
+    // Extract the ID from the taskData
+    const {
+      id,
+      ...payload
+    } = taskData;
+    const apiUrl = `/api/tasks/${id}`;
+
+    try {
+      // Send the PUT request
+      const response = await fetch(apiUrl, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(payload)
+      });
+
+      // Handle the response
+      if (!response.ok) {
+        throw new Error(`Error: ${response.status} ${response.statusText}`);
+      }
+
+      return await response.json();
+    } catch (error) {
+      console.error('Failed to update task:', error);
+    }
+  }
+</script>

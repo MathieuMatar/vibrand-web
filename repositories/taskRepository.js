@@ -19,10 +19,10 @@ class TaskRepository {
         }
     }
 
-    static async createTask(type, projectId, created_by, assigned_to, completed_by, dueDate, taskDescription, importanceLevel) {
+    static async createTask(type, project_id, created_by, assigned_to, completed_by, due_date, task_description, importance_level) {
         try {
             const newTask = await Task.create(
-                { type, projectId, created_by, assigned_to, completed_by, dueDate, taskDescription, importanceLevel }
+                { type, project_id, created_by, assigned_to, completed_by, due_date, task_description, importance_level }
             );
             return newTask;
         } catch (error) {
@@ -31,10 +31,10 @@ class TaskRepository {
         }
     }
 
-    static async updateTask(id, type, projectId, created_by, assigned_to, completed_by, dueDate, taskDescription, importanceLevel) {
+    static async updateTask(id, type, project_id, created_by, assigned_to, completed_by, due_date, task_description, importance_level) {
         try {
             await Task.update(
-                { type, projectId, created_by, assigned_to, completed_by, dueDate, taskDescription, importanceLevel },
+                { type, project_id, created_by, assigned_to, completed_by, due_date, task_description, importance_level},
                 { where: { id } }
             );
             return { success: true, message: "Task updated successfully." };

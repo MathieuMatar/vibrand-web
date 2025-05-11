@@ -54,12 +54,14 @@ class TaskService {
         return TaskRepository.readTask(id);
     }
 
-    static async createTask(type, projectId, created_by, assigned_to, completed_by, dueDate, taskDescription, importanceLevel) {
-        return TaskRepository.createTask(type, projectId, created_by, assigned_to, completed_by, dueDate, taskDescription, importanceLevel);
+    static async createTask( type, project_id, created_by, assigned_to, completed_by, due_date, task_description, importance_level) {
+        console.log("hello");
+        console.log(project_id, created_by)
+        return TaskRepository.createTask( type, project_id, created_by, assigned_to, completed_by, due_date, task_description, importance_level);
     }
 
-    static async updateTask(id, type, projectId, created_by, assigned_to, completed_by, dueDate, taskDescription, importanceLevel) {
-        return TaskRepository.updateTask(id, type, projectId, created_by, assigned_to, completed_by, dueDate, taskDescription, importanceLevel);
+    static async updateTask(id, type, project_id, created_by, assigned_to, completed_by, due_date, task_description, importance_level) {
+        return TaskRepository.updateTask(id, type, project_id, created_by, assigned_to, completed_by, due_date, task_description, importance_level);
     }
 
     static async deleteTask(id) {

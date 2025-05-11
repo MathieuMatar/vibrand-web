@@ -1,3 +1,4 @@
+console.log('------------------------------------------------------------------------------');
 const express = require('express');
 const cors = require('cors');
 const os = require('os');
@@ -18,6 +19,7 @@ const app = express();
 app.use(express.static('views'));
 app.use(cors());
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.set('view engine', 'ejs');
 
 app.use('/api/services', serviceRoutes);
@@ -29,9 +31,7 @@ app.use('/api/tasks', taskRoutes);
 app.use('/api/users', userRoutes);
 app.use('/', viewRoutes);
 
-(async () => {
-    await syncDB();
-})();
+(async () => { await syncDB(); })();
 
 const PORT = process.env.PORT;
 
@@ -50,3 +50,4 @@ app.listen(PORT, '0.0.0.0', () => {
     console.log(` - Local:   http://localhost:${PORT}`);
     console.log(` - Network: http://${localIP}:${PORT}`);
 });
+console.log('------------------------------------------------------------------------------');

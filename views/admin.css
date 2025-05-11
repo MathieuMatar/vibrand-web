@@ -19,9 +19,12 @@ header {
     border-bottom-right-radius: 25px;
     padding-left: 20px;
     padding-top: 20px;
+    overflow-y: scroll;
+    direction: rtl;
+    text-align: left;
 }
 
-a {
+header a {
     padding: 6px 10px;
     height: 45px;
     border-top-left-radius: 25px;
@@ -32,6 +35,10 @@ a {
     display: flex;
     align-items: center;
     gap: 10px;
+    direction: ltr;
+    width: max-content;
+    text-align: left;
+    width: 100%;
 }
 
 a:hover {
@@ -66,16 +73,21 @@ header a span {
     max-width: 0;
     overflow: hidden;
     transition: max-width 0.5s ease;
+    white-space: nowrap;
+    
 }
 
 header:hover a span {
-    max-width: 400px;
+    max-width: 4000px;
 }
 
 .name {
     max-width: 0;
     overflow: hidden;
     transition: max-width 0.5s ease;
+    width: 100%;
+    text-align: left;
+    white-space: nowrap;
 }
 
 
@@ -97,7 +109,7 @@ header:hover .home {
 }
 
 header:hover .name {
-    max-width: 200px;
+    max-width: 500px;
 
 }
 
@@ -112,6 +124,11 @@ body {
 
 .parent {
     width: 100%;
+    height: 100%;
+}
+
+header:hover ~ .parent {
+    width: auto;
     height: 100%;
 }
 
@@ -228,4 +245,5 @@ body {
     justify-content: center;
     z-index: 2;
     background: #fbfaf6;
+    text-align: center;
 }

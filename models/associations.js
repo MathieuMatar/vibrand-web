@@ -54,7 +54,6 @@ User.hasMany(Task, { foreignKey: 'completed_by' });
 
 const syncDB = async () => {
     await sequelize.sync({alter: true});
-
     console.log("All tables have been created");
 }
 

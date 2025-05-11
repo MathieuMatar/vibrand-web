@@ -43,7 +43,7 @@ const sequelize = new Sequelize(
             acquire: 3000,
             idle: 1000,
         },
-        logging: true
+        logging: false
     }
 );
 

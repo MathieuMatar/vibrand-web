@@ -17,6 +17,11 @@ pages.forEach((page) => {
 router.get('/user/:id', ViewsController.getUserPage);
 router.get('/user/:id/project/:projectId', ViewsController.renderUserProject);
 router.get('/user/:id/project/:projectId/task', ViewsController.renderUserTask);
+router.get('/task/new/:user/:project', ViewsController.renderNewTask);
+router.get('/task/:id/:user/:project', ViewsController.renderSingleTask);
+router.get('/project-info/:id', ViewsController.renderProjectInfo);
+router.get('/user-tasks/:id', ViewsController.renderAllUserTasks);
+
 
 router.get('/admin/settings', async (req, res) => {
     res.render('admin/settings');
