@@ -20,6 +20,11 @@ class UserService {
     static async deleteUser(id) {
         return await UserRepository.deleteUser(id);
     }
+
+    static async authenticateUser(name, password) {
+        const userlogin = await UserRepository.authenticateUser(name, password);
+        return userlogin;
+    }
 }
 
 module.exports = UserService;

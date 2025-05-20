@@ -57,6 +57,11 @@ class ClientService {
     static async deleteClient(id) {
         return await ClientRepository.deleteClient(id);
     }
+
+    static async authenticateUser(username, password) {
+        const user = await ClientRepository.authenticateUser(username, password);
+            return user;
+    }
 }
 
 module.exports = ClientService;

@@ -2,6 +2,8 @@ console.log('-------------------------------------------------------------------
 const express = require('express');
 const cors = require('cors');
 const os = require('os');
+const fs = require('fs');
+const path = require('path');
 const { syncDB } = require('./models/associations');
 
 require('dotenv').config();
@@ -16,10 +18,37 @@ const viewRoutes = require('./routes/viewsRoutes');
 const userRoutes = require('./routes/userRoutes');
 
 const app = express();
+
+
+
+
+// Request logging middleware to log all requests to log.txt
+const logFilePath = path.join(__dirname, 'log.txt');
+app.use((req, res, next) => {
+    const now = new Date().toISOString();
+    const logEntry = `[${now}] ${req.method} ${req.originalUrl}\n`;
+    fs.appendFile(logFilePath, logEntry, (err) => {
+        if (err) {
+            console.error('Failed to write to log file:', err);
+        }
+    });
+    next();
+});
+
+
+
+
+
+
+
+
 app.use(express.static('views'));
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+const methodOverride = require('method-override');
+app.use(methodOverride('_method'));
+
 app.set('view engine', 'ejs');
 
 app.use('/api/services', serviceRoutes);

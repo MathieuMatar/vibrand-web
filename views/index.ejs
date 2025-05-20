@@ -1,194 +1,358 @@
 <%- include('header') %>
-    <link rel="stylesheet" href="home.css">
-    <main style="min-height: 200vh;">
-        <section class="intro">
-            Hey there, we’re Vibrand Studio agency
-            <h1 style="color: var(--black)">Where Mental Agility Meets Creative Expression</h1>
-            Founded 4 years ago on the principle of mental agility,<br>
-            Vibrand has been at the forefront of creative innovation.
-            <div>
-                <a>VibrandStudio@gmail.com</a>
-                <a>+961 3 77 88 99 </a>
-                <a class="btn">More Info</a>
-            </div>
-        </section>
-        <section id="projects" style="text-align: center;">
-            <h1 id="prjct-title" class="prjct-title">Projects</h1>
-            <div class="slider-track" id="slider-track">
-                <svg style="left: 60px;" class="arrow" id="arrowPrev" onclick="move('left')" height="18"
-                    viewBox="0 0 8 14" fill="none">
-                    <path d="M7.12744 1.5L1.62744 7L7.12744 12.5" stroke="white" stroke-width="2" stroke-linecap="round"
-                        stroke-linejoin="round" />
-                </svg>
+<link rel="stylesheet" href="home.css">
+<main style="min-height: 200vh;">
+  <section class="intro">
+    Hey there, we’re Vibrand Studio agency
+    <h1 style="color: var(--black)">Where Mental Agility Meets Creative Expression</h1>
+    Founded 4 years ago on the principle of mental agility,<br>
+    Vibrand has been at the forefront of creative innovation.
+    <div>
+      <a>VibrandStudio@gmail.com</a>
+      <a>+961 3 77 88 99 </a>
+      <a class="btn">More Info</a>
+    </div>
+  </section>
+  <section id="projects" style="text-align: center;">
+    <h1 id="prjct-title" class="prjct-title">Projects</h1>
+    <div class="slider-track" id="slider-track">
+      <svg style="left: 60px;" class="arrow" id="arrowPrev" onclick="move('left')" height="18" viewBox="0 0 8 14" fill="none">
+        <path d="M7.12744 1.5L1.62744 7L7.12744 12.5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+      </svg>
 
-                <% projects.forEach(project=> { %>
-                    <div class="single-prjct" id="single-prjct" style="background-image: url('prjct.png');">
-                        <h2><%= project.name %></h2>
-                        <h3><%= project.client_id %></h3>
-                        <p><%= project.description %></p>
-                        <span>Date: 00/00/00</span>
-                        <a href="#">View Project</a>
-                    </div>
-                    <% }); %>
+      <% projects.forEach(project=> { %>
+      <div class="single-prjct" id="single-prjct" style="background-image: url('prjct.png');">
+        <h2><%= project.name %></h2>
+        <h3><%= project.client_id %></h3>
+        <p><%= project.description %></p>
+        <span>Date: 00/00/00</span>
+        <a href="#">View Project</a>
+      </div>
+      <% }); %>
 
 
-                                <svg style="right: 60px;" class="arrow" id="arrowNext" onclick="move('right')"
-                                    height="18" viewBox="0 0 8 14" fill="none">
-                                    <path d="M1.24658 1.5L6.74658 7L1.24658 12.5" stroke="white" stroke-width="2"
-                                        stroke-linecap="round" stroke-linejoin="round" />
-                                </svg>
-            </div>
-            <a href="/projects" id="Project-toggleBtn" class="btn">View More Projects</a>
-        </section>
-        <section style="text-align: center;" id="clients">
-            <h1>Clients</h1>
-            Our variety of clients extends among different sectors:<br>
-            vFood & Beverages, Hospitality & Real Estate, Medical Services, Education
-            <div class="srvc-container" id="serviceContainer">
-                <% clients.forEach(client=> { %>
-                    <a title="<%= client.name %>">
-                    <img src="clients.png" />
-                </a>
-                <% }); %>
+      <svg style="right: 60px;" class="arrow" id="arrowNext" onclick="move('right')" height="18" viewBox="0 0 8 14" fill="none">
+        <path d="M1.24658 1.5L6.74658 7L1.24658 12.5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+      </svg>
+    </div>
+    <a href="/projects" id="Project-toggleBtn" class="btn stop" onclick="projects()">View More Projects</a>
+  </section>
+  <section style="text-align: center;" id="clients">
+    <h1>Clients</h1>
+    Our variety of clients extends among different sectors:<br>
+    vFood & Beverages, Hospitality & Real Estate, Medical Services, Education
+    <div class="srvc-container" id="serviceContainer">
+      <!--img src="clients.png" /-->
+
+
+      <style>
+        a.video-fit {
+          display: block;
+          width: 350px;
+          height: 350px;
+          margin: 20px;
+          box-sizing: border-box;
+          background: #000;
+          /* optional: fills the letterbox space */
+        }
+
+        a.video-fit video {
+          width: 100%;
+          height: 100%;
+          object-fit: contain;
+          object-position: center;
+          display: block;
+        }
+      </style>
+
+
+
+      <% clients.forEach(client=> { %>
+
+
+      <a class="video-fit" title="<%= client.name %>">
+        <video autoplay muted>
+          <source src="/media/clients/<%= client.image %>" type="video/mp4">
+          Your browser does not support the video tag.
+        </video>
+      </a>
+
+
+
+      <% }); %>
 
 
 
 
 
+    </div>
+    <a href="/clients" class="btn stop" id="Cleints-toggleBtn" onclick="clients()">View More Clients</a>
+  </section>
 
 
+  <section style="text-align: center;" id="services">
+    <h1>Services</h1>
+    We offer 2 types of design packages - want to know more about our offering
+    <div class="srvc-container" style="height: auto;">
+      <div class="square full" id="experience" onclick="document.querySelector('.service-info.experience').style.display = 'block'; document.querySelector('.service-info.express').style.display = 'none';">
+        Vibrand Studio
+        <span>Experience</span>
+        <a class="btn stop" href="/services" onclick="services()">More info</a>
+      </div>
+      <div class="square" id="express" onclick="document.querySelector('.service-info.express').style.display = 'block'; document.querySelector('.service-info.experience').style.display = 'none';">
+        Vibrand Studio
+        <span>Express</span>
+        <a class="btn stop" href="/services" onclick="services()">More info</a>
+      </div>
+    </div>
+    <div class="service-info-container" style="display: none;">
+      <div class="service-info experience" style="display: block;">info about experience</div>
+      <div class="service-info express" style="display: none;">info about express</div>
+    </div>
+  </section>
 
-            </div>
-            <a href="/clients" class="btn stop" onclick="clients()">View More Clients</a>
-        </section>
+  <section style="text-align: center;" id="sacredbranding">
+    <h1>Sacred Branding</h1>
+    We offer also other types of Branding
+    <div class="srvc-container" style="height: auto;">
+      <div class="square full" onclick="document.querySelector('.service-info.ngo').style.display = 'block'; document.querySelector('.service-info.religious').style.display = 'none';">
+        Vibrand Studio
+        <span>NGOs</span>
+        <a href="/sacredbranding" class="btn stop" onclick="sacredbranding()">More info</a>
+      </div>
+      <div class="square" onclick="document.querySelector('.service-info.religious').style.display = 'block'; document.querySelector('.service-info.ngo').style.display = 'none';">
+        Vibrand Studio
+        <span>Religious Projects</span>
+        <a href="/sacredbranding" class="btn stop" onclick="sacredbranding()">More info</a>
+      </div>
+    </div>
+    <div class="branding-info-container" style="display: none;">
+      <div class="service-info ngo" style="display: block;">info about ngo</div>
+      <div class="service-info religious" style="display: none;">info about Religious Projects</div>
+    </div>
+  </section>
 
 
-        <section style="text-align: center;" id="services">
-            <h1>Services</h1>
-            We offer 2 types of design packages - want to know more about our offering
-            <div>
-                <div class="square full">
-                    Vibrand Studio
-                    <span>Experience</span>
-                    <a class="btn">More info</a>
-                </div>
-                <div class="square">
-                    Vibrand Studio
-                    <span>Express</span>
-                    <a class="btn">More info</a>
-                </div>
-            </div>
-        </section>
-
-        <section style="text-align: center;" id="branding">
-            <h1>Sacred Branding</h1>
-            We offer also other types of Branding
-            <div>
-                <div class="square full">
-                    Vibrand Studio
-                    <span>NGOs</span>
-                    <a class="btn">More info</a>
-                </div>
-                <div class="square">
-                    Vibrand Studio
-                    <span>Religious Projects</span>
-                    <a class="btn">More info</a>
-                </div>
-            </div>
-        </section>
-
-
-        <section style="text-align: center;" id="ceo">
-            <h1>Martine Boutros</h1>
-            CEO & co-founder of Vibrand Studios agency
-            <div>
-                <div class="square" style=" background-image:  url(img.png);    background-repeat: no-repeat;
+  <section style="text-align: center;" id="ceo">
+    <h1>Martine Boutros</h1>
+    CEO & co-founder of Vibrand Studios agency
+    <div>
+      <div class="square" style=" background-image:  url(img.png);    background-repeat: no-repeat;
                     object-fit: fill;">
-                    <a class="btn">More info</a>
-                </div>
-            </div>
-        </section>
+        <a class="btn">More info</a>
+      </div>
+    </div>
+  </section>
 
-        <section style="text-align: center;" id="chat">
-            <h1>Let’s Talk</h1>
-            We’d love to hear from you!<br>
-            Drop us a line, Give us a call or pass by our office at Antwork.
-            <br><br><br>
-            <a class="btn">More info</a>
-        </section>
+  <section style="text-align: center;" id="chat">
+    <h1>Let’s Talk</h1>
+    We’d love to hear from you!<br>
+    Drop us a line, Give us a call or pass by our office at Antwork.
+    <br><br><br>
+    <a class="btn">More info</a>
+  </section>
 
-        <script src="projects.js"></script>
+  <script src="projects.js"></script>
 
-    </main>
+</main>
 
-    <script>
-        const pageLink = window.location.pathname.slice(1);
-        // Trigger the function with the same name as the pageLink
-        if (typeof window[pageLink] === 'function') {
-            window[pageLink]();
-        } else {
-            console.warn(`Function "${pageLink}" not found.`);
-        }
+<script>
+  const pageLink = window.location.pathname.slice(1);
+  // Trigger the function with the same name as the pageLink
+  if (typeof window[pageLink] === 'function') {
+    window[pageLink]();
+  } else {
+    console.warn(`Function "${pageLink}" not found.`);
+  }
 
-        document.querySelectorAll('a.stop').forEach(link => {
-            link.addEventListener('click', function (event) {
-                event.preventDefault();
-                const href = link.getAttribute('href');
-                history.pushState(null, '', href);
-            });
-        });
+  document.querySelectorAll('a.stop').forEach(link => {
+    link.addEventListener('click', function(event) {
+      event.preventDefault();
+      const href = link.getAttribute('href');
+      history.pushState(null, '', href);
+    });
+  });
 
-    </script>
+  function clients() {
+    removeRest('clients');
+    const container = document.getElementById("serviceContainer");
+    const collapsed = 700;
+    const clbtn = document.getElementById('Cleints-toggleBtn');
 
-    <script>
-        function clients() {
-            removeRest('clients');
-            const container = document.getElementById("serviceContainer");
-            const collapsed = 700;
+    if (container.style.height === `${collapsed}px` || !container.style.height) {
+      container.style.height = container.scrollHeight + "px";
+      clbtn.style.display = "none";
+    } else {
+      container.style.height = collapsed + "px";
+    }
+  }
 
-            if (container.style.height === `${collapsed}px` || !container.style.height) {
-                container.style.height = container.scrollHeight + "px";
-            } else {
-                container.style.height = collapsed + "px";
-            }
-        }
+  function projects() {
+    removeRest('projects');
+    const container = document.getElementById('slider-track');
+    const titleElement = document.getElementById('prjct-title');
+    const arrowPrev = document.getElementById('arrowPrev');
+    const arrowNext = document.getElementById('arrowNext');
+    const prjbtn = document.getElementById('Project-toggleBtn');
+    if (container.classList.contains('wrapped')) {
+      container.classList.remove('wrapped');
+      //display none the arrows
+      arrowPrev.style.display = 'block';
+      arrowNext.style.display = 'block';
+      titleElement.classList.toggle('prjct-title');
+      prjbtn.style.display = 'block';
 
-        function projects() {
-            removeRest('projects');
-            const container = document.getElementById('slider-track');
-            const titleElement = document.getElementById('prjct-title');
-            const arrowPrev = document.getElementById('arrowPrev');
-            const arrowNext = document.getElementById('arrowNext');
-            if (container.classList.contains('wrapped')) {
-                container.classList.remove('wrapped');
-                //display none the arrows
-                arrowPrev.style.display = 'block';
-                arrowNext.style.display = 'block';
-                titleElement.classList.toggle('prjct-title');
+      console.log('Container unwrapped');
+    } else {
+      container.classList.add('wrapped');
+      //display block the arrowa
+      arrowPrev.style.display = 'none';
+      arrowNext.style.display = 'none';
+      titleElement.classList.toggle('prjct-title');
+      prjbtn.style.display = 'none';
+    }
+  }
 
-                console.log('Container unwrapped');
-            } else {
-                container.classList.add('wrapped');
-                //display block the arrowa
-                arrowPrev.style.display = 'none';
-                arrowNext.style.display = 'none';
-                titleElement.classList.toggle('prjct-title');
-            }
-        }
+  function services() {
+    removeRest('services');
+    /*
+        apply the following css to the .square 's in the services section'
+        height: calc(var(--btn-height) * 4);
+        padding-top: 10px;
+    }*/
+    const squares = document.querySelectorAll('.square');
+    squares.forEach(square => {
+      square.style.height = 'calc(var(--btn-height) * 4)';
+      square.style.paddingTop = '10px';
+    });
 
-        async function removeRest(keep) {
-            //query id keep
-            const keepElement = document.getElementById(keep);
-            //remove all <section> elements except keepElement
-            const sections = document.querySelectorAll('section');
-            sections.forEach(section => {
-                if (section !== keepElement) {
-                    section.style.display = 'none';
-                } else {
-                    section.style.display = 'block';
-                }
-            });
+    //also remove the .btn in the services section
+    const btns = document.querySelectorAll('.btn');
+    btns.forEach(btn => {
+      btn.style.display = 'none';
+    });
 
-        }
-    </script>
-    <%- include('footer') %>
+    const srvc_containers = document.querySelectorAll('.srvc-container');
+    srvc_containers.forEach(container => {
+      // Instead of setting a static border, we'll create an animated one
+      // container.style.borderBottom = '4px solid red';
+      container.style.height = 'auto';
+
+      // Add position relative to container if not already set
+      // This ensures the absolute positioning of the border works correctly
+      if (getComputedStyle(container).position === 'static') {
+        container.style.position = 'relative';
+      }
+
+      // Create the animated border element
+      const borderElement = document.createElement('div');
+
+      // Set initial styles
+      Object.assign(borderElement.style, {
+        position: 'absolute',
+        bottom: '0',
+        left: '0',
+        height: '4px', // Match your original 4px border
+        backgroundColor: 'var(--coral)', // Match your original red color
+        width: '0px',
+        transition: 'width 1s ease-out'
+      });
+
+      // Add border element to container
+      container.appendChild(borderElement);
+
+      // Force reflow before animation
+      void borderElement.offsetWidth;
+
+      // Start animation
+      setTimeout(function() {
+        borderElement.style.width = '100%';
+      }, 10);
+    });
+
+    const serviceinfocontainer = document.querySelector('.service-info-container');
+    serviceinfocontainer.style.display = 'block';
+  }
+
+
+
+
+  function sacredbranding() {
+    removeRest('sacredbranding');
+    /*
+        apply the following css to the .square 's in the services section'
+        height: calc(var(--btn-height) * 4);
+        padding-top: 10px;
+    }*/
+    const squares = document.querySelectorAll('.square');
+    squares.forEach(square => {
+      square.style.height = 'calc(var(--btn-height) * 4)';
+      square.style.paddingTop = '10px';
+    });
+
+    //also remove the .btn in the services section
+    const btns = document.querySelectorAll('.btn');
+    btns.forEach(btn => {
+      btn.style.display = 'none';
+    });
+
+    const srvc_containers = document.querySelectorAll('.srvc-container');
+    srvc_containers.forEach(container => {
+      // Instead of setting a static border, we'll create an animated one
+      // container.style.borderBottom = '4px solid red';
+      container.style.height = 'auto';
+
+      // Add position relative to container if not already set
+      // This ensures the absolute positioning of the border works correctly
+      if (getComputedStyle(container).position === 'static') {
+        container.style.position = 'relative';
+      }
+
+      // Create the animated border element
+      const borderElement = document.createElement('div');
+
+      // Set initial styles
+      Object.assign(borderElement.style, {
+        position: 'absolute',
+        bottom: '0',
+        left: '0',
+        height: '4px', // Match your original 4px border
+        backgroundColor: 'var(--coral)', // Match your original red color
+        width: '0px',
+        transition: 'width 1s ease-out'
+      });
+
+      // Add border element to container
+      container.appendChild(borderElement);
+
+      // Force reflow before animation
+      void borderElement.offsetWidth;
+
+      // Start animation
+      setTimeout(function() {
+        borderElement.style.width = '100%';
+      }, 10);
+    });
+
+    const serviceinfocontainer = document.querySelector('.branding-info-container');
+    serviceinfocontainer.style.display = 'block';
+  }
+
+
+
+
+  async function removeRest(keep) {
+    //query id keep
+    const keepElement = document.getElementById(keep);
+    //remove all <section> elements except keepElement
+    const sections = document.querySelectorAll('section');
+    sections.forEach(section => {
+      if (section !== keepElement) {
+        section.style.display = 'none';
+      } else {
+        section.style.display = 'block';
+      }
+    });
+
+  }
+</script>
+<%- include('footer') %>

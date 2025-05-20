@@ -68,5 +68,22 @@ class UserRepository {
             return { success: false, message: "Failed to delete user." };
         }
     }
+
+    static async authenticateUser(name, password) {
+        try {
+            const user = await User.findOne({ where: { name, password } });
+            if (!user) {
+                return `/wronglogin`; // User not found
+            }
+            const userId = user.id;
+
+            //return a redirect to the page /user/:id
+
+            return `/user/${userId}`;
+        } catch (error) {
+            console.error("Error authenticating user:", error);
+            return `/wronglogin`;
+        }
+    }
 }
 module.exports = UserRepository;

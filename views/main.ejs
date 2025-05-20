@@ -1,385 +1,378 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Services Management</title>
-    <!-- Bootstrap CSS -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
-</head>
-<body>
-    <div class="container mt-4">
-        <h1>Services Management</h1>
-        
-        <div id="alert" class="alert d-none mt-3"></div>
-        
-        <button class="btn btn-primary mb-3" id="openAddModal">Add New Service</button>
-        
-        <div class="d-flex justify-content-center">
-            <div class="spinner-border text-primary d-none" id="loader" role="status">
-                <span class="visually-hidden">Loading...</span>
-            </div>
-        </div>
-        
-        <div class="table-responsive">
-            <table class="table table-striped table-hover">
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Name</th>
-                        <th>Description</th>
-                        <th>Rate ($)</th>
-                        <th>Duration (min)</th>
-                        <th>Status</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody id="servicesTableBody">
-                    <!-- Service data will be inserted here -->
-                </tbody>
-            </table>
-        </div>
-    </div>
-    
-    <!-- Add/Edit Service Modal -->
-    <div class="modal fade" id="serviceModal" tabindex="-1" aria-labelledby="serviceModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="modalTitle">Add New Service</h5>
-                    <button type="button" class="btn-close" id="closeModal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form id="serviceForm">
-                        <input type="hidden" id="serviceId">
-                        
-                        <div class="mb-3">
-                            <label for="name" class="form-label">Service Name:</label>
-                            <input type="text" class="form-control" id="name" required>
-                        </div>
-                        
-                        <div class="mb-3">
-                            <label for="description" class="form-label">Description:</label>
-                            <textarea class="form-control" id="description" rows="3" required></textarea>
-                        </div>
-                        
-                        <div class="mb-3">
-                            <label for="rate" class="form-label">Rate ($):</label>
-                            <input type="number" class="form-control" id="rate" min="0" step="0.01" required>
-                        </div>
-                        
-                        <div class="mb-3">
-                            <label for="duration" class="form-label">Duration (minutes):</label>
-                            <input type="number" class="form-control" id="duration" min="1" required>
-                        </div>
-                        
-                        <div class="mb-3">
-                            <label for="status" class="form-label">Status:</label>
-                            <select class="form-select" id="status" required>
-                                <option value="Active">Active</option>
-                                <option value="Inactive">Inactive</option>
-                                <option value="Pending">Pending</option>
-                            </select>
-                        </div>
-                        
-                        <div class="d-grid">
-                            <button type="submit" class="btn btn-primary" id="submitBtn">Save Service</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-    
-    <!-- Delete Confirmation Modal -->
-    <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Confirm Deletion</h5>
-                    <button type="button" class="btn-close" id="closeDeleteModal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <p>Are you sure you want to delete this service? This action cannot be undone.</p>
-                    <input type="hidden" id="deleteServiceId">
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" id="cancelDelete">Cancel</button>
-                    <button type="button" class="btn btn-danger" id="confirmDelete">Delete</button>
-                </div>
-            </div>
-        </div>
-    </div>
 
-    <!-- Bootstrap JS -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
-    
-    <script>
-        // API base URL - change this to match your API endpoint
-        const API_BASE_URL = '/api/services';
-        
-        // Bootstrap Modal instances
-        let serviceModalInstance;
-        let deleteModalInstance;
-        
-        // DOM Elements
-        const servicesTableBody = document.getElementById('servicesTableBody');
-        const serviceModal = document.getElementById('serviceModal');
-        const deleteModal = document.getElementById('deleteModal');
-        const serviceForm = document.getElementById('serviceForm');
-        const modalTitle = document.getElementById('modalTitle');
-        const loader = document.getElementById('loader');
-        const alertDiv = document.getElementById('alert');
-        
-        // Modal form elements
-        const serviceIdInput = document.getElementById('serviceId');
-        const nameInput = document.getElementById('name');
-        const descriptionInput = document.getElementById('description');
-        const rateInput = document.getElementById('rate');
-        const durationInput = document.getElementById('duration');
-        const statusInput = document.getElementById('status');
-        
-        // Button elements
-        const openAddModalBtn = document.getElementById('openAddModal');
-        const closeModalBtn = document.getElementById('closeModal');
-        const closeDeleteModalBtn = document.getElementById('closeDeleteModal');
-        const cancelDeleteBtn = document.getElementById('cancelDelete');
-        const confirmDeleteBtn = document.getElementById('confirmDelete');
-        const deleteServiceIdInput = document.getElementById('deleteServiceId');
-        
-        // Initialize Bootstrap modals
-        document.addEventListener('DOMContentLoaded', function() {
-            serviceModalInstance = new bootstrap.Modal(serviceModal);
-            deleteModalInstance = new bootstrap.Modal(deleteModal);
-            loadServices();
-        });
-        
-        // Event Listeners
-        openAddModalBtn.addEventListener('click', openAddModal);
-        closeModalBtn.addEventListener('click', closeModal);
-        closeDeleteModalBtn.addEventListener('click', closeDeleteModal);
-        cancelDeleteBtn.addEventListener('click', closeDeleteModal);
-        confirmDeleteBtn.addEventListener('click', deleteService);
-        serviceForm.addEventListener('submit', handleFormSubmit);
-        
-        // Functions
-        
-        // Show loading indicator
-        function showLoader() {
-            loader.classList.remove('d-none');
-        }
-        
-        // Hide loading indicator
-        function hideLoader() {
-            loader.classList.add('d-none');
-        }
-        
-        // Show alert message
-        function showAlert(message, type) {
-            alertDiv.textContent = message;
-            alertDiv.className = `alert alert-${type}`;
-            alertDiv.classList.remove('d-none');
-            
-            // Auto hide after 5 seconds
-            setTimeout(() => {
-                alertDiv.classList.add('d-none');
-            }, 5000);
-        }
-        
-        // Load all services from the API
-        async function loadServices() {
-            try {
-                showLoader();
-                const response = await fetch(API_BASE_URL);
-                
-                if (!response.ok) {
-                    throw new Error(`HTTP error! Status: ${response.status}`);
-                }
-                
-                const services = await response.json();
-                displayServices(services);
-            } catch (error) {
-                console.error('Error loading services:', error);
-                showAlert('Failed to load services. Please try again.', 'danger');
-            } finally {
-                hideLoader();
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Management Dashboard</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet" />
+</head>
+
+<body class="bg-light">
+<nav class="navbar navbar-light bg-light sticky-top justify-content-center">
+    <a href="/" class="btn btn-primary mx-2">Home</a>
+    <a href="#services-management" class="btn btn-link mx-2">Services</a>
+    <a href="#clients-management" class="btn btn-link mx-2">Clients</a>
+    <a href="#users-management" class="btn btn-link mx-2">Users</a>
+    <a href="#projects-management" class="btn btn-link mx-2">Projects</a>
+</nav>
+
+
+  <!-- Services Management -->
+  <div class="container py-5" id="services-management">
+    <h2 class="mb-4 text-center">Services Management</h2>
+
+    <table class="table table-hover table-bordered align-middle text-center bg-white shadow-sm rounded">
+      <thead class="table-dark">
+        <tr>
+          <th>ID</th>
+          <th>Name</th>
+          <th>Description</th>
+          <th>Rate</th>
+          <th>Duration</th>
+          <th>Status</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% services.forEach(service => { %>
+        <tr id="row-<%= service.id %>" class="data-row">
+          <form id="form-<%= service.id %>" action="http://localhost:3002/api/services/<%= service.id %>?_method=PUT" method="POST">
+            <input type="hidden" name="_method" value="PUT">
+            <td><%= service.id %></td>
+            <td><input type="text" name="name" value="<%= service.name %>" class="form-control edit-field" disabled></td>
+            <td><input type="text" name="description" value="<%= service.description %>" class="form-control edit-field" disabled></td>
+            <td><input type="number" name="rate" value="<%= service.rate %>" class="form-control edit-field" disabled></td>
+            <td><input type="number" name="duration" value="<%= service.duration %>" class="form-control edit-field" disabled></td>
+            <td>
+              <select name="status" class="form-select edit-field" disabled>
+                <option value="Active" <%= service.status === 'Active' ? 'selected' : '' %>>Active</option>
+                <option value="Inactive" <%= service.status === 'Inactive' ? 'selected' : '' %>>Inactive</option>
+              </select>
+            </td>
+            <td>
+              <div class="d-flex justify-content-center gap-2 flex-wrap">
+                <button type="button" class="btn btn-sm btn-warning update-btn" onclick="toggleEditMode(this, true)">Edit</button>
+                <button type="submit" class="btn btn-sm btn-success submit-btn d-none">Submit</button>
+                <button type="button" class="btn btn-sm btn-secondary cancel-btn d-none" onclick="toggleEditMode(this, false)">Cancel</button>
+              </div>
+              <div class="btn btn-sm btn-danger mt-1" onclick="deleteUrl('http://localhost:3002/api/services/<%= service.id %>')">Delete</div>
+            </td>
+          </form>
+        </tr>
+        <% }); %>
+
+        <!-- Add New Service Row -->
+        <form id="form-new-service" action="http://localhost:3002/api/services" method="POST">
+          <tr id="row-new-service" class="new-row">
+            <td>New</td>
+            <td>
+              <input type="text" name="name" placeholder="Service Name" required class="form-control">
+            </td>
+            <td>
+              <input type="text" name="description" placeholder="Service Description" required class="form-control">
+            </td>
+            <td>
+              <input type="number" name="rate" placeholder="Rate" required class="form-control">
+            </td>
+            <td>
+              <input type="number" name="duration" placeholder="Duration" required class="form-control">
+            </td>
+            <td>
+              <select name="status" class="form-select" required>
+                <option value="Active" selected>Active</option>
+                <option value="Inactive">Inactive</option>
+              </select>
+            </td>
+            <td>
+              <button type="submit" class="btn btn-success">Add Service</button>
+            </td>
+          </tr>
+        </form>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Clients Management -->
+  <div class="container py-5" id="clients-management">
+    <h2 class="mb-4 text-center">Clients Management</h2>
+
+    <table class="table table-hover table-bordered align-middle text-center bg-white shadow-sm rounded">
+      <thead class="table-dark">
+        <tr>
+          <th>ID</th>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Phone</th>
+          <th>Address</th>
+          <th>Client Type</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% clients.forEach(client => { %>
+        <tr id="client-row-<%= client.id %>" class="data-row">
+          <form id="client-form-<%= client.id %>" action="http://localhost:3002/api/clients/<%= client.id %>?_method=PUT" method="POST">
+            <input type="hidden" name="_method" value="PUT">
+            <td><%= client.id %></td>
+            <td><input type="text" name="name" value="<%= client.name %>" class="form-control edit-field" disabled></td>
+            <td><input type="email" name="email" value="<%= client.email %>" class="form-control edit-field" disabled></td>
+            <td><input type="text" name="phone" value="<%= client.phone %>" class="form-control edit-field" disabled></td>
+            <td><input type="text" name="address" value="<%= client.address %>" class="form-control edit-field" disabled></td>
+            <td>
+              <select name="client_type" class="form-select edit-field" disabled>
+                <option value="Corporate" <%= client.client_type === 'Corporate' ? 'selected' : '' %>>Corporate</option>
+                <option value="Individual" <%= client.client_type === 'Individual' ? 'selected' : '' %>>Individual</option>
+                <option value="Government" <%= client.client_type === 'Government' ? 'selected' : '' %>>Government</option>
+              </select>
+            </td>
+            <td>
+              <div class="d-flex justify-content-center gap-2 flex-wrap">
+                <button type="button" class="btn btn-sm btn-warning update-btn" onclick="toggleEditMode(this, true)">Edit</button>
+                <button type="submit" class="btn btn-sm btn-success submit-btn d-none">Submit</button>
+                <button type="button" class="btn btn-sm btn-secondary cancel-btn d-none" onclick="toggleEditMode(this, false)">Cancel</button>
+              </div>
+              <div class="btn btn-sm btn-danger mt-1" onclick="deleteUrl('http://localhost:3002/api/clients/<%= client.id %>')">Delete</div>
+            </td>
+          </form>
+        </tr>
+        <% }); %>
+
+        <!-- Add New Client Row -->
+        <form id="form-new-client" action="http://localhost:3002/api/clients" method="POST">
+          <tr id="row-new-client" class="new-row">
+            <td>New</td>
+            <td>
+              <input type="text" name="name" placeholder="Client Name" required class="form-control">
+            </td>
+            <td>
+              <input type="email" name="email" placeholder="Email" required class="form-control">
+            </td>
+            <td>
+              <input type="text" name="phone" placeholder="Phone" required class="form-control">
+            </td>
+            <td>
+              <input type="text" name="address" placeholder="Address" required class="form-control">
+            </td>
+            <td>
+              <select name="client_type" class="form-select" required>
+                <option value="Corporate" selected>Corporate</option>
+                <option value="Individual">Individual</option>
+                <option value="Government">Government</option>
+              </select>
+            </td>
+            <td>
+              <button type="submit" class="btn btn-success">Add Client</button>
+            </td>
+          </tr>
+        </form>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Users Management -->
+  <div class="container py-5" id="users-management">
+    <h2 class="mb-4 text-center">Users Management</h2>
+
+    <table class="table table-hover table-bordered align-middle text-center bg-white shadow-sm rounded">
+      <thead class="table-dark">
+        <tr>
+          <th>ID</th>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Phone</th>
+          <th>Position</th>
+          <th>Company</th>
+          <th>Password</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% users.forEach(user => { %>
+        <tr id="user-row-<%= user.id %>" class="data-row">
+          <form id="user-form-<%= user.id %>" action="http://localhost:3002/api/users/<%= user.id %>?_method=PUT" method="POST">
+            <input type="hidden" name="_method" value="PUT">
+            <td><%= user.id %></td>
+            <td><input type="text" name="name" value="<%= user.name %>" class="form-control edit-field" disabled></td>
+            <td><input type="email" name="email" value="<%= user.email %>" class="form-control edit-field" disabled></td>
+            <td><input type="text" name="phone" value="<%= user.phone %>" class="form-control edit-field" disabled></td>
+            <td><input type="text" name="position" value="<%= user.position %>" class="form-control edit-field" disabled></td>
+            <td><input type="text" name="company" value="<%= user.company %>" class="form-control edit-field" disabled></td>
+            <td><input type="password" name="password" value="<%= user.password %>" class="form-control edit-field" disabled></td>
+            <td>
+              <div class="d-flex justify-content-center gap-2 flex-wrap">
+                <button type="button" class="btn btn-sm btn-warning update-btn" onclick="toggleEditMode(this, true)">Edit</button>
+                <button type="submit" class="btn btn-sm btn-success submit-btn d-none">Submit</button>
+                <button type="button" class="btn btn-sm btn-secondary cancel-btn d-none" onclick="toggleEditMode(this, false)">Cancel</button>
+              </div>
+              <div class="btn btn-sm btn-danger mt-1" onclick="deleteUrl('http://localhost:3002/api/users/<%= user.id %>')">Delete</div>
+            </td>
+          </form>
+        </tr>
+        <% }); %>
+
+        <!-- Add New User Row -->
+        <form id="form-new-user" action="http://localhost:3002/api/users" method="POST">
+          <tr id="row-new-user" class="new-row">
+            <td>New</td>
+            <td>
+              <input type="text" name="name" placeholder="User Name" required class="form-control">
+            </td>
+            <td>
+              <input type="email" name="email" placeholder="Email" required class="form-control">
+            </td>
+            <td>
+              <input type="text" name="phone" placeholder="Phone" required class="form-control">
+            </td>
+            <td>
+              <input type="text" name="position" placeholder="Position" required class="form-control">
+            </td>
+            <td>
+              <input type="text" name="company" placeholder="Company ID" required class="form-control">
+            </td>
+            <td>
+              <input type="password" name="password" placeholder="Password" required class="form-control">
+            </td>
+            <td>
+              <button type="submit" class="btn btn-success">Add User</button>
+            </td>
+          </tr>
+        </form>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Projects Management -->
+  <div class="container py-5" id="projects-management">
+    <h2 class="mb-4 text-center">Projects Management</h2>
+
+    <table class="table table-hover table-bordered align-middle text-center bg-white shadow-sm rounded">
+      <thead class="table-dark">
+        <tr>
+          <th>ID</th>
+          <th>Name</th>
+          <th>Description</th>
+          <th>Client ID</th>
+          <th>Start Date</th>
+          <th>Deadline</th>
+          <th>Status</th>
+          <th>Overview</th>
+          <th>Files</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% projects.forEach(project => { %>
+        <tr id="project-row-<%= project.id %>" class="data-row">
+          <form id="project-form-<%= project.id %>" action="http://localhost:3002/api/projects/<%= project.id %>?_method=PUT" method="POST">
+            <input type="hidden" name="_method" value="PUT">
+            <td><%= project.id %></td>
+            <td><input type="text" name="name" value="<%= project.name %>" class="form-control edit-field" disabled></td>
+            <td><input type="text" name="description" value="<%= project.description %>" class="form-control edit-field" disabled></td>
+            <td><input type="number" name="client_id" value="<%= project.client_id %>" class="form-control edit-field" disabled></td>
+            <td><input type="date" name="start_date" value="<%= project.start_date %>" class="form-control edit-field" disabled></td>
+            <td><input type="date" name="deadline" value="<%= project.deadline %>" class="form-control edit-field" disabled></td>
+            <td>
+              <select name="status" class="form-select edit-field" disabled>
+                <option value="Pending" <%= project.status === 'Pending' ? 'selected' : '' %>>Pending</option>
+                <option value="In Progress" <%= project.status === 'In Progress' ? 'selected' : '' %>>In Progress</option>
+                <option value="Completed" <%= project.status === 'Completed' ? 'selected' : '' %>>Completed</option>
+                <option value="On Hold" <%= project.status === 'On Hold' ? 'selected' : '' %>>On Hold</option>
+                <option value="Cancelled" <%= project.status === 'Cancelled' ? 'selected' : '' %>>Cancelled</option>
+              </select>
+            </td>
+            <td><textarea name="overview" class="form-control edit-field" disabled><%= project.overview %></textarea></td>
+            <td><input type="text" name="files" value="<%= project.files %>" class="form-control edit-field" disabled></td>
+            <td>
+              <div class="d-flex justify-content-center gap-2 flex-wrap">
+                <button type="button" class="btn btn-sm btn-warning update-btn" onclick="toggleEditMode(this, true)">Edit</button>
+                <button type="submit" class="btn btn-sm btn-success submit-btn d-none">Submit</button>
+                <button type="button" class="btn btn-sm btn-secondary cancel-btn d-none" onclick="toggleEditMode(this, false)">Cancel</button>
+              </div>
+              <div class="btn btn-sm btn-danger mt-1" onclick="deleteUrl('http://localhost:3002/api/projects/<%= project.id %>')">Delete</div>
+            </td>
+          </form>
+        </tr>
+        <% }); %>
+
+        <!-- Add New Project Row -->
+        <form id="form-new-project" action="http://localhost:3002/api/projects" method="POST">
+          <tr id="row-new-project" class="new-row">
+            <td>New</td>
+            <td>
+              <input type="text" name="name" placeholder="Project Name" required class="form-control">
+            </td>
+            <td>
+              <input type="text" name="description" placeholder="Description" required class="form-control">
+            </td>
+            <td>
+              <input type="number" name="client_id" placeholder="Client ID" required class="form-control">
+            </td>
+            <td>
+              <input type="date" name="start_date" required class="form-control">
+            </td>
+            <td>
+              <input type="date" name="deadline" required class="form-control">
+            </td>
+            <td>
+              <select name="status" class="form-select" required>
+                <option value="Pending" selected>Pending</option>
+                <option value="In Progress">In Progress</option>
+                <option value="Completed">Completed</option>
+                <option value="On Hold">On Hold</option>
+                <option value="Cancelled">Cancelled</option>
+              </select>
+            </td>
+            <td>
+              <textarea name="overview" placeholder="Project Overview" required class="form-control"></textarea>
+            </td>
+            <td>
+              <input type="text" name="files" placeholder="Files" required class="form-control">
+            </td>
+            <td>
+              <button type="submit" class="btn btn-success">Add Project</button>
+            </td>
+          </tr>
+        </form>
+      </tbody>
+    </table>
+  </div>
+
+  <script>
+    function toggleEditMode(button, isEdit) {
+      const row = button.closest('.data-row');
+      row.querySelectorAll('.edit-field').forEach(field => {
+        field.disabled = !isEdit;
+      });
+      row.querySelector('.update-btn').classList.toggle('d-none', isEdit);
+      row.querySelector('.submit-btn').classList.toggle('d-none', !isEdit);
+      row.querySelector('.cancel-btn').classList.toggle('d-none', !isEdit);
+    }
+
+    function deleteUrl(url) {
+      if (confirm("Are you sure you want to delete this item?")) {
+        fetch(url, {
+            method: 'DELETE',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          })
+          .then(response => {
+            if (response.ok) {
+              alert("Deleted successfully");
+              location.reload();
+            } else {
+              alert("Failed to delete. Status: " + response.status);
             }
-        }
-        
-        // Display services in the table
-        function displayServices(services) {
-            servicesTableBody.innerHTML = '';
-            
-            if (services.length === 0) {
-                const noDataRow = document.createElement('tr');
-                noDataRow.innerHTML = '<td colspan="7" class="text-center">No services found</td>';
-                servicesTableBody.appendChild(noDataRow);
-                return;
-            }
-            
-            services.forEach(service => {
-                const row = document.createElement('tr');
-                
-                row.innerHTML = `
-                    <td>${service.id}</td>
-                    <td>${service.name}</td>
-                    <td>${service.description}</td>
-                    <td>$${parseFloat(service.rate).toFixed(2)}</td>
-                    <td>${service.duration}</td>
-                    <td>${service.status}</td>
-                    <td>
-                        <button class="btn btn-sm btn-success edit-btn" data-id="${service.id}">Edit</button>
-                        <button class="btn btn-sm btn-danger delete-btn" data-id="${service.id}">Delete</button>
-                    </td>
-                `;
-                
-                servicesTableBody.appendChild(row);
-            });
-            
-            // Add event listeners to action buttons
-            document.querySelectorAll('.edit-btn').forEach(button => {
-                button.addEventListener('click', (e) => openEditModal(e.target.dataset.id));
-            });
-            
-            document.querySelectorAll('.delete-btn').forEach(button => {
-                button.addEventListener('click', (e) => openDeleteModal(e.target.dataset.id));
-            });
-        }
-        
-        // Open modal for adding a new service
-        function openAddModal() {
-            modalTitle.textContent = 'Add New Service';
-            serviceForm.reset();
-            serviceIdInput.value = '';
-            serviceModalInstance.show();
-        }
-        
-        // Open modal for editing an existing service
-        async function openEditModal(id) {
-            try {
-                showLoader();
-                modalTitle.textContent = 'Edit Service';
-                
-                const response = await fetch(`${API_BASE_URL}/${id}`);
-                
-                if (!response.ok) {
-                    throw new Error(`HTTP error! Status: ${response.status}`);
-                }
-                
-                const service = await response.json();
-                
-                // Populate form fields
-                serviceIdInput.value = service.id;
-                nameInput.value = service.name;
-                descriptionInput.value = service.description;
-                rateInput.value = service.rate;
-                durationInput.value = service.duration;
-                statusInput.value = service.status;
-                
-                serviceModalInstance.show();
-            } catch (error) {
-                console.error('Error loading service details:', error);
-                showAlert('Failed to load service details.', 'danger');
-            } finally {
-                hideLoader();
-            }
-        }
-        
-        // Close the service modal
-        function closeModal() {
-            serviceModalInstance.hide();
-        }
-        
-        // Open delete confirmation modal
-        function openDeleteModal(id) {
-            deleteServiceIdInput.value = id;
-            deleteModalInstance.show();
-        }
-        
-        // Close delete confirmation modal
-        function closeDeleteModal() {
-            deleteModalInstance.hide();
-        }
-        
-        // Handle form submission (add or edit)
-        async function handleFormSubmit(e) {
-            e.preventDefault();
-            
-            const serviceData = {
-                name: nameInput.value,
-                description: descriptionInput.value,
-                rate: parseFloat(rateInput.value),
-                duration: parseInt(durationInput.value),
-                status: statusInput.value
-            };
-            
-            const id = serviceIdInput.value;
-            const isEdit = !!id;
-            
-            try {
-                showLoader();
-                
-                let response;
-                if (isEdit) {
-                    // Update existing service
-                    response = await fetch(`${API_BASE_URL}/${id}`, {
-                        method: 'PUT',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify(serviceData)
-                    });
-                } else {
-                    // Create new service
-                    response = await fetch(API_BASE_URL, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify(serviceData)
-                    });
-                }
-                
-                if (!response.ok) {
-                    throw new Error(`HTTP error! Status: ${response.status}`);
-                }
-                
-                closeModal();
-                loadServices();
-                showAlert(`Service ${isEdit ? 'updated' : 'created'} successfully!`, 'success');
-            } catch (error) {
-                console.error(`Error ${isEdit ? 'updating' : 'creating'} service:`, error);
-                showAlert(`Failed to ${isEdit ? 'update' : 'create'} service.`, 'danger');
-            } finally {
-                hideLoader();
-            }
-        }
-        
-        // Delete a service
-        async function deleteService() {
-            const id = deleteServiceIdInput.value;
-            
-            try {
-                showLoader();
-                
-                const response = await fetch(`${API_BASE_URL}/${id}`, {
-                    method: 'DELETE'
-                });
-                
-                if (!response.ok) {
-                    throw new Error(`HTTP error! Status: ${response.status}`);
-                }
-                
-                closeDeleteModal();
-                loadServices();
-                showAlert('Service deleted successfully!', 'success');
-            } catch (error) {
-                console.error('Error deleting service:', error);
-                showAlert('Failed to delete service.', 'danger');
-            } finally {
-                hideLoader();
-            }
-        }
-    </script>
+          })
+          .catch(error => {
+            console.error("Error:", error);
+            alert("An error occurred");
+          });
+      }
+    }
+  </script>
 </body>
+
 </html>

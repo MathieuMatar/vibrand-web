@@ -134,8 +134,8 @@ color-mix(in srgb, var(--coral) 77%, transparent);
     gap: 60px;
     justify-content: center;
     overflow: hidden;
-    height: 700px;
-    transition: height 0.5s ease;
+    height: 860px;
+    transition: height 2s ease;
     margin: 30px;
 }
 

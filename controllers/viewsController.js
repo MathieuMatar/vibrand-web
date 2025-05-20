@@ -2,6 +2,7 @@ const projectService = require('../services/projectService');
 const ClientService = require('../services/clientService');
 const UserService = require('../services/userService');
 const TaskService = require('../services/taskService');
+const serviceService = require('../services/serviceService');
 
 class ViewsController {
     static async renderPage(req, res) {
@@ -99,6 +100,15 @@ class ViewsController {
             console.error('Error rendering user tasks:', error);
             res.status(500).send('Internal Server Error');
         }
+    }
+
+    static async renderMain(req, res) {
+        const services = await serviceService.readServices();
+        const clients = await ClientService.readClients();
+        const users = await UserService.readUsers();
+        const projects = await projectService.readProjects();
+        
+        res.render('main', { services, clients, users, projects });
     }
 
 

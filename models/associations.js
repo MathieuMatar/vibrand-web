@@ -7,6 +7,7 @@ const Service = require('./Service');
 const Milestone = require('./Milestone');
 const Task = require('./Task');
 const User = require('./User');
+const Client = require('./Client');
 
 //User.hasMany(Order, {foreignKey: 'user_id', onDelete: 'CASCADE'});
 //Order.belongsTo(User, {foreignKey: 'user_id'});
