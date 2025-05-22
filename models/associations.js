@@ -2,7 +2,6 @@
 const sequelize = require('../config/db-sequelize');
 const Project = require('./Project');
 const Employee = require('./Employee');
-const Contact = require('./Contact');
 const Service = require('./Service');
 const Milestone = require('./Milestone');
 const Task = require('./Task');
@@ -14,9 +13,9 @@ const Client = require('./Client');
 Project.belongsToMany(Employee, { through: 'ProjectEmployee' });
 Employee.belongsToMany(Project, { through: 'ProjectEmployee' });
 
-//contact and project many to many
+/*contact and project many to many
 Contact.belongsToMany(Project, { through: 'ProjectContact' });
-Project.belongsToMany(Contact, { through: 'ProjectContact' });
+Project.belongsToMany(Contact, { through: 'ProjectContact' });*/
 
 //projectservice
 Project.belongsToMany(Service, { through: 'ProjectService' });
@@ -59,4 +58,4 @@ const syncDB = async () => {
 }
 
 //module.exports = {User, Order, syncDB, sequelize}
-module.exports = { Project, Employee, Contact, Service, Milestone, Task, User, syncDB, sequelize }
+module.exports = { Project, Employee, Service, Milestone, Task, User, syncDB, sequelize }

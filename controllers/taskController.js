@@ -40,17 +40,14 @@ const taskService = require('../repositories/taskRepository');
  * @memberof TaskController
  * @param {Object} req - Express request object.
  * @param {Object} req.body - The request payload containing task details.
- * @param {string} req.body.type - The type of task.
- * @param {string|number} req.body.projectId - The identifier of the associated project.
- * @param {string|number} req.body.contactAssigned - The identifier of the contact assigned to the task.
- * @param {string|number} req.body.employeeAssigned - The identifier of the employee assigned to the task.
- * @param {string|number} req.body.contactCompleted - The identifier of the contact who completed the task.
- * @param {string|number} req.body.employeeCompleted - The identifier of the employee who completed the task.
- * @param {boolean} req.body.completed - Indicates whether the task is completed.
- * @param {string|Date} req.body.date - The date the task was created or assigned.
- * @param {string|Date} req.body.dueDate - The deadline for the task.
- * @param {string} req.body.taskDescription - The description of the task.
- * @param {string|number} req.body.importanceLevel - The importance or priority level of the task.
+ * @param {string} req.body.type - The type of task ('note' or 'task').
+ * @param {string|number} req.body.project_id - The identifier of the associated project.
+ * @param {string|number} req.body.created_by - The identifier of the user who created the task.
+ * @param {string|number} req.body.assigned_to - The identifier of the user assigned to the task.
+ * @param {string|number} req.body.completed_by - The identifier of the user who completed the task.
+ * @param {string|Date} req.body.due_date - The deadline for the task.
+ * @param {string} req.body.task_description - The description of the task.
+ * @param {string} req.body.importance_level - The importance level ('Critical', 'High', 'Medium', 'Low', 'Optional').
  * @param {Object} res - Express response object.
  * @returns {Promise<void>} Returns a Promise that resolves with the newly created task details or an error message.
  * @throws {Error} An error occurred while creating the task.
@@ -66,17 +63,14 @@ const taskService = require('../repositories/taskRepository');
  * @param {Object} req.params - Route parameters.
  * @param {string|number} req.params.id - The unique identifier of the task to be updated.
  * @param {Object} req.body - The request payload containing updated task details.
- * @param {string} req.body.type - The updated type of task.
- * @param {string|number} req.body.projectId - The updated identifier of the associated project.
- * @param {string|number} req.body.contactAssigned - The updated identifier of the contact assigned to the task.
- * @param {string|number} req.body.employeeAssigned - The updated identifier of the employee assigned to the task.
- * @param {string|number} req.body.contactCompleted - The updated identifier of the contact who completed the task.
- * @param {string|number} req.body.employeeCompleted - The updated identifier of the employee who completed the task.
- * @param {boolean} req.body.completed - The updated completion status of the task.
- * @param {string|Date} req.body.date - The updated date the task was created or assigned.
- * @param {string|Date} req.body.dueDate - The updated deadline for the task.
- * @param {string} req.body.taskDescription - The updated description of the task.
- * @param {string|number} req.body.importanceLevel - The updated importance or priority level of the task.
+ * @param {string} req.body.type - The updated type of task ('note' or 'task').
+ * @param {string|number} req.body.project_id - The updated identifier of the associated project.
+ * @param {string|number} req.body.created_by - The updated identifier of the user who created the task.
+ * @param {string|number} req.body.assigned_to - The updated identifier of the user assigned to the task.
+ * @param {string|number} req.body.completed_by - The updated identifier of the user who completed the task.
+ * @param {string|Date} req.body.due_date - The updated deadline for the task.
+ * @param {string} req.body.task_description - The updated description of the task.
+ * @param {string} req.body.importance_level - The updated importance level ('Critical', 'High', 'Medium', 'Low', 'Optional').
  * @param {Object} res - Express response object.
  * @returns {Promise<void>} Returns a Promise that resolves with the updated task details or a 404 error if not found.
  * @throws {Error} An error occurred while updating the task.

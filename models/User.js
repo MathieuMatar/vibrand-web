@@ -4,6 +4,17 @@ const moment = require("moment");
 
 class User extends Model {}
 
+/**
+ * User model
+ * - name: string(100), required, cannot be empty
+ * - password: string(100), required, cannot be empty
+ * - company: integer, optional, foreign key to clients table
+ * - position: string(50), optional
+ * - email: string(100), optional, must be valid email format
+ * - phone: string(20), optional
+ * - timestamps: true (createdAt, updatedAt)
+ */
+
 User.init(
     {
         name: {

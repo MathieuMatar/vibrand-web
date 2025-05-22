@@ -6,15 +6,12 @@ class Task extends Model { }
 
 /**
  * Task model
- * - type: enum ['note', 'task'], required
+ * - type: enum ['note', 'task'], optional, defaults to 'note'
  * - project_id: integer, optional, foreign key to Projects
- * - contact_assigned: integer, optional, foreign key to Contacts
- * - employee_assigned: integer, optional, foreign key to Employees
- * - contact_completed: integer, optional, foreign key to Contacts
- * - employee_completed: integer, optional, foreign key to Employees
- * - completed: enum ['Y', 'N', 'C'], required
- * - date: date, optional, defaults to current date
- * - due_date: date, optional, defaults to current date
+ * - created_by: integer, optional, foreign key to Users
+ * - assigned_to: integer, optional, foreign key to Users
+ * - completed_by: integer, optional, foreign key to Users
+ * - due_date: date (YYYY-MM-DD), optional, defaults to current date
  * - task_description: text, optional
  * - importance_level: enum ['Critical', 'High', 'Medium', 'Low', 'Optional'], optional
  */

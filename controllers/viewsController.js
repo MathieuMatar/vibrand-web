@@ -52,7 +52,9 @@ class ViewsController {
         try {
             //const task = await projectService.readTask(id);
             const task = await TaskService.readTask(id);
-            res.render('admin/task', { task, user, project });
+            const project__ = await projectService.readProject(project);
+            const users = project__.Users;
+            res.render('admin/task', { task, user, project, users });
         } catch (error) {
             console.error('Error rendering single task:', error);
             res.status(500).send('Internal Server Error');

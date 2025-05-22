@@ -1,5 +1,48 @@
 const Task = require('../models/Task');
 
+/**
+ * The TaskRepository class handles database operations for the Task model.
+ *
+ * @method readTasks
+ * @returns {Promise<Array|Object>} Returns array of tasks on success, or error object on failure.
+ * @description Retrieves all tasks from the database.
+ *
+ * @method readTask
+ * @param {number} id - The ID of the task to retrieve.
+ * @returns {Promise<Object|null>} Returns task object on success, null if not found, or error object on failure.
+ * @description Retrieves a single task by its ID.
+ *
+ * @method createTask
+ * @param {string} type - The type of task ('note' or 'task').
+ * @param {number} project_id - The ID of the project the task belongs to (optional).
+ * @param {number} created_by - The ID of the user who created the task (optional).
+ * @param {number} assigned_to - The ID of the user the task is assigned to (optional).
+ * @param {number} completed_by - The ID of the user who completed the task (optional).
+ * @param {Date} due_date - The due date of the task (optional).
+ * @param {string} task_description - The description of the task (optional).
+ * @param {string} importance_level - The importance level ('Critical', 'High', 'Medium', 'Low', 'Optional') (optional).
+ * @returns {Promise<Object>} Returns created task object on success, or error object on failure.
+ * @description Creates a new task.
+ *
+ * @method updateTask
+ * @param {number} id - The ID of the task to update.
+ * @param {string} type - The type of task ('note' or 'task').
+ * @param {number} project_id - The ID of the project the task belongs to (optional).
+ * @param {number} created_by - The ID of the user who created the task (optional).
+ * @param {number} assigned_to - The ID of the user the task is assigned to (optional).
+ * @param {number} completed_by - The ID of the user who completed the task (optional).
+ * @param {Date} due_date - The due date of the task (optional).
+ * @param {string} task_description - The description of the task (optional).
+ * @param {string} importance_level - The importance level ('Critical', 'High', 'Medium', 'Low', 'Optional') (optional).
+ * @returns {Promise<Object>} Returns success object with message on success, or error object on failure.
+ * @description Updates an existing task.
+ *
+ * @method deleteTask
+ * @param {number} id - The ID of the task to delete.
+ * @returns {Promise<Object>} Returns success object on successful deletion, or error object on failure.
+ * @description Removes a task.
+ */
+
 class TaskRepository {
     static async readTasks() {
         try {

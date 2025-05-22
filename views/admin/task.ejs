@@ -88,7 +88,15 @@
     <%=task.task_description%>
   </div>
   <input type="date" id="due_date" name="due_date" value="<%=task.due_date%>">
-  <input type="number" id="assigned_to" name="assigned_to" value="<%=task.assigned_to%>">
+  <select id="assigned_to" name="assigned_to">
+    <% users.forEach(function(user) { %>
+      <option value="<%= user.id %>" <%= user.id === task.assigned_to ? 'selected' : '' %>><%= user.name %></option>
+    <% }); %>
+  </select>
+
+
+
+
   <select name="importance" id="importance">
     <option value="Critical" <%=task.importance_level==='Critical' ? 'selected' : '' %>>Critical</option>
     <option value="High" <%=task.importance_level==='High' ? 'selected' : '' %>>High</option>
@@ -152,3 +160,5 @@
     }
   }
 </script>
+
+

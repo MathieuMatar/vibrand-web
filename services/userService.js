@@ -1,4 +1,43 @@
-const UserRepository = require('../repositories/UserRepository');
+const UserRepository = require('../repositories/userRepository');
+
+/**
+ * Provides user-related operations.
+ *
+ * @method readUsers
+ * @returns {Promise<Object[]>} A promise resolving to a list of users.
+ *
+ * @method readUser
+ * @param {number} id - User identifier.
+ * @returns {Promise<Object>} A promise resolving to the user details.
+ *
+ * @method createUser
+ * @param {string} name - The user's name.
+ * @param {string} password - The user's password.
+ * @param {string} company - The user's company.
+ * @param {string} position - The user's position.
+ * @param {string} email - The user's email address.
+ * @param {string} phone - The user's phone number.
+ * @returns {Promise<Object>} A promise resolving to the newly created user.
+ *
+ * @method updateUser
+ * @param {number} id - The user identifier.
+ * @param {string} name - The user's name.
+ * @param {string} password - The user's password.
+ * @param {string} company - The user's company.
+ * @param {string} position - The user's position.
+ * @param {string} email - The user's email address.
+ * @param {string} phone - The user's phone number.
+ * @returns {Promise<Object>} A promise resolving to the updated user.
+ *
+ * @method deleteUser
+ * @param {number} id - The user identifier.
+ * @returns {Promise<void>} A promise resolving when deletion is complete.
+ *
+ * @method authenticateUser
+ * @param {string} name - The user's name.
+ * @param {string} password - The user's password.
+ * @returns {Promise<Object|null>} A promise resolving to the authenticated user or null if authentication fails.
+ */
 
 class UserService {
     static async readUsers() {

@@ -11,32 +11,26 @@ const TaskRepository = require("../repositories/taskRepository");
  * @returns {Promise<Object>} A promise resolving to the task details.
  *
  * @method createTask
- * @param {string} type - The type of the task.
- * @param {number} projectId - The associated project identifier.
- * @param {number} contactAssigned - The identifier for the contact assigned to the task.
- * @param {number} employeeAssigned - The identifier for the employee assigned to the task.
- * @param {number} contactCompleted - The identifier for the contact who completed the task.
- * @param {number} employeeCompleted - The identifier for the employee who completed the task.
- * @param {boolean} completed - Indicates whether the task is completed.
- * @param {Date|string} date - The creation date of the task.
- * @param {Date|string} dueDate - The due date of the task.
- * @param {string} taskDescription - The description of the task.
- * @param {number} importanceLevel - The importance level of the task.
+ * @param {string} type - The type of the task ('note' or 'task').
+ * @param {number} project_id - The associated project identifier.
+ * @param {number} created_by - The identifier for the user who created the task.
+ * @param {number} assigned_to - The identifier for the user assigned to the task.
+ * @param {number} completed_by - The identifier for the user who completed the task.
+ * @param {Date|string} due_date - The due date of the task.
+ * @param {string} task_description - The description of the task.
+ * @param {string} importance_level - The importance level of the task ('Critical', 'High', 'Medium', 'Low', 'Optional').
  * @returns {Promise<Object>} A promise resolving to the newly created task.
  *
  * @method updateTask
  * @param {number} id - The task identifier.
- * @param {string} type - The type of the task.
- * @param {number} projectId - The associated project identifier.
- * @param {number} contactAssigned - The identifier for the contact assigned to the task.
- * @param {number} employeeAssigned - The identifier for the employee assigned to the task.
- * @param {number} contactCompleted - The identifier for the contact who completed the task.
- * @param {number} employeeCompleted - The identifier for the employee who completed the task.
- * @param {boolean} completed - Indicates whether the task is completed.
- * @param {Date|string} date - The creation date of the task.
- * @param {Date|string} dueDate - The due date of the task.
- * @param {string} taskDescription - The description of the task.
- * @param {number} importanceLevel - The importance level of the task.
+ * @param {string} type - The type of the task ('note' or 'task').
+ * @param {number} project_id - The associated project identifier.
+ * @param {number} created_by - The identifier for the user who created the task.
+ * @param {number} assigned_to - The identifier for the user assigned to the task.
+ * @param {number} completed_by - The identifier for the user who completed the task.
+ * @param {Date|string} due_date - The due date of the task.
+ * @param {string} task_description - The description of the task.
+ * @param {string} importance_level - The importance level of the task ('Critical', 'High', 'Medium', 'Low', 'Optional').
  * @returns {Promise<Object>} A promise resolving to the updated task.
  *
  * @method deleteTask

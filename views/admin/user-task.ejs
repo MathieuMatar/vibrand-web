@@ -46,7 +46,7 @@
 </style>
 <a class="btn" href="/task/new/<%= id %>/<%= projectId %>">+</a>
 <% tasks.forEach(task=> { %>
-<a class="single-<%= task.type %>" href='/task/<%= task.id %>/<%= id %>/<%= projectId %>'>
+<a class="single-<%= task.type %>" href='/task/<%= task.id %>/<%= task.project_id %>/<%= task.project_id %>'>
   <% if (task.type==='task' ) { %>
   <input type="checkbox" <%= task.completed_by ? 'checked' : '' %>>
   <% } %>
