@@ -1,14 +1,14 @@
-const { Project, Employee, Contact, Service, Milestone, Task, User, syncDB, sequelize } = require('../models/associations');
+const { Project, Employee, Service, Milestone, Task, User, syncDB, sequelize } = require('../models/associations');
 
 /**
  * The ProjectRepository class handles database operations for the Project model.
  *
  * @method readProjects
- * @description Retrieves all projects including related Milestones, Employees, Contacts, Services, and Tasks.
+ * @description Retrieves all projects including related Milestones, Services, Users, and Tasks.
  *
  * @method readProject
  * @param {number} id - The ID of the project to retrieve.
- * @description Retrieves a single project by ID including related Milestones, Employees, Contacts, Services, and Tasks.
+ * @description Retrieves a single project by ID including related Milestones, Services, Users, and Tasks.
  *
  * @method createProject
  * @param {string} name - The name of the project.
@@ -37,25 +37,15 @@ const { Project, Employee, Contact, Service, Milestone, Task, User, syncDB, sequ
  * @param {number} id - The ID of the project to delete.
  * @description Removes a project.
  *
- * @method assignEmployeeToProject
+ * @method associateUserWithProject
  * @param {number} project_id - The ID of the project.
- * @param {number} employee_id - The ID of the employee to assign.
- * @description Assigns an employee to a project.
+ * @param {number} user_id - The ID of the user to associate.
+ * @description Associates a user with a project.
  *
- * @method removeEmployeeFromProject
+ * @method removeUserFromProject
  * @param {number} project_id - The ID of the project.
- * @param {number} employee_id - The ID of the employee to remove.
- * @description Removes an employee from a project.
- *
- * @method associateContactWithProject
- * @param {number} project_id - The ID of the project.
- * @param {number} contact_id - The ID of the contact to associate.
- * @description Associates a contact with a project.
- *
- * @method removeContactFromProject
- * @param {number} project_id - The ID of the project.
- * @param {number} contact_id - The ID of the contact to remove.
- * @description Removes a contact from a project.
+ * @param {number} user_id - The ID of the user to remove.
+ * @description Removes a user from a project.
  *
  * @method linkServiceToProject
  * @param {number} project_id - The ID of the project.
@@ -67,6 +57,7 @@ const { Project, Employee, Contact, Service, Milestone, Task, User, syncDB, sequ
  * @param {number} service_id - The ID of the service to unlink.
  * @description Unlinks a service from a project.
  */
+
 
 class ProjectRepository {
     static async readProjects() {
@@ -143,75 +134,37 @@ class ProjectRepository {
         }
     }
 
-    static async assignEmployeeToProject(project_id, employee_id) {
+    static async associateUserWithProject(project_id, user_id) {
         try {
             const project = await Project.findByPk(project_id);
-            const employee = await Employee.findByPk(employee_id);
+            const user = await User.findByPk(user_id);
 
-            if (!project || !employee) {
-                return { success: false, message: "Invalid project or employee ID." };
+            if (!project || !user) {
+                return { success: false, message: "Invalid project or user ID." };
             }
 
-            // Sequelize automatically creates this method from the belongsToMany association
-            await project.addEmployee(employee);
-
-            return { success: true, message: "Employee successfully assigned to project." };
+            await project.addUser(user);
+            return { success: true, message: "User associated with project." };
         } catch (error) {
-            console.error("Error assigning employee to project:", error);
-            return { success: false, message: "Failed to assign employee to project." };
+            console.error("Error associating user:", error);
+            return { success: false, message: "Failed to associate user." };
         }
     }
 
-    static async removeEmployeeFromProject(project_id, employee_id) {
+    static async removeUserFromProject(project_id, user_id) {
         try {
             const project = await Project.findByPk(project_id);
-            const employee = await Employee.findByPk(employee_id);
+            const user = await User.findByPk(user_id);
 
-            if (!project || !employee) {
-                return { success: false, message: "Invalid project or employee ID." };
+            if (!project || !user) {
+                return { success: false, message: "Invalid project or user ID." };
             }
 
-            await project.removeEmployee(employee);
-
-            return { success: true, message: "Employee removed from project." };
+            await project.removeUser(user);
+            return { success: true, message: "User removed from project." };
         } catch (error) {
-            console.error("Error removing employee from project:", error);
-            return { success: false, message: "Failed to remove employee from project." };
-        }
-    }
-
-    static async associateContactWithProject(project_id, contact_id) {
-        try {
-            const project = await Project.findByPk(project_id);
-            const contact = await Contact.findByPk(contact_id);
-
-            if (!project || !contact) {
-                return { success: false, message: "Invalid project or contact ID." };
-            }
-
-            await project.addContact(contact);
-            return { success: true, message: "Contact associated with project." };
-        } catch (error) {
-            console.error("Error associating contact:", error);
-            return { success: false, message: "Failed to associate contact." };
-        }
-    }
-
-
-    static async removeContactFromProject(project_id, contact_id) {
-        try {
-            const project = await Project.findByPk(project_id);
-            const contact = await Contact.findByPk(contact_id);
-
-            if (!project || !contact) {
-                return { success: false, message: "Invalid project or contact ID." };
-            }
-
-            await project.removeContact(contact);
-            return { success: true, message: "Contact removed from project." };
-        } catch (error) {
-            console.error("Error removing contact:", error);
-            return { success: false, message: "Failed to remove contact." };
+            console.error("Error removing user:", error);
+            return { success: false, message: "Failed to remove user." };
         }
     }
 

@@ -37,24 +37,14 @@ const ProjectRepository = require('../repositories/projectRepository');
  * @param {number} id - The project identifier.
  * @returns {Promise<Object>} A promise resolving to an object with success status and message.
  *
- * @method assignEmployeeToProject
+ * @method associateUserWithProject
  * @param {number} project_id - The project identifier.
- * @param {number} employee_id - The employee identifier.
+ * @param {number} user_id - The user identifier.
  * @returns {Promise<Object>} A promise resolving to an object with success status and message.
  *
- * @method removeEmployeeFromProject
+ * @method removeUserFromProject
  * @param {number} project_id - The project identifier.
- * @param {number} employee_id - The employee identifier.
- * @returns {Promise<Object>} A promise resolving to an object with success status and message.
- *
- * @method associateContactWithProject
- * @param {number} project_id - The project identifier.
- * @param {number} contact_id - The contact identifier.
- * @returns {Promise<Object>} A promise resolving to an object with success status and message.
- *
- * @method removeContactFromProject
- * @param {number} project_id - The project identifier.
- * @param {number} contact_id - The contact identifier.
+ * @param {number} user_id - The user identifier.
  * @returns {Promise<Object>} A promise resolving to an object with success status and message.
  *
  * @method linkServiceToProject
@@ -67,6 +57,7 @@ const ProjectRepository = require('../repositories/projectRepository');
  * @param {number} service_id - The service identifier.
  * @returns {Promise<Object>} A promise resolving to an object with success status and message.
  */
+
 
 class projectService{
     static async readProjects(){
@@ -89,21 +80,14 @@ class projectService{
         return ProjectRepository.deleteProject(id);
     }
 
-    static async assignEmployeeToProject(project_id, employee_id) {
-        return ProjectRepository.assignEmployeeToProject(project_id, employee_id);
+    static async associateUserWithProject(project_id, user_id) {
+        return ProjectRepository.associateUserWithProject(project_id, user_id);
     }
 
-    static async removeEmployeeFromProject(project_id, employee_id) {
-        return ProjectRepository.removeEmployeeFromProject(project_id, employee_id);
+    static async removeUserFromProject(project_id, user_id) {
+        return ProjectRepository.removeUserFromProject(project_id, user_id);
     }
 
-    static async associateContactWithProject(project_id, contact_id) {
-        return ProjectRepository.associateContactWithProject(project_id, contact_id);
-    }
-
-    static async removeContactFromProject(project_id, contact_id) {
-        return ProjectRepository.removeContactFromProject(project_id, contact_id);
-    }
 
     static async linkServiceToProject(project_id, service_id) {
         return ProjectRepository.linkServiceToProject(project_id, service_id);

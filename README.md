@@ -10,9 +10,7 @@ Below is the comprehensive documentation for all API routes in the application. 
 ## Table of Contents
 
 - [Services API](#services-api)
-- [Employees API](#employees-api)
 - [Clients API](#clients-api)
-- [Contacts API](#contacts-api)
 - [Projects API](#projects-api)
 - [Tasks API](#tasks-api)
 - [Users API](#users-api)
@@ -52,40 +50,13 @@ Below is the comprehensive documentation for all API routes in the application. 
 
 ---
 
-## Employees API
 
-### Endpoints
 
-| Method | URL | Description |
-|--------|-----|-------------|
-| `GET` | `/api/employees` | Retrieve all employees |
-| `GET` | `/api/employees/:id` | Retrieve a specific employee by ID |
-| `POST` | `/api/employees` | Create a new employee |
-| `PUT` | `/api/employees/:id` | Update an employee by ID |
-| `DELETE` | `/api/employees/:id` | Delete an employee by ID |
 
-### Parameters
 
-- `:id` - Employee ID (for GET, PUT, DELETE methods)
 
-### Request Body (POST/PUT)
 
-```json
-{
-  "name": "string",
-  "password": "string",
-  "first_name": "string",
-  "father_name": "string",
-  "last_name": "string",
-  "position": "string",
-  "email": "string",
-  "phone": "string",
-  "hire_date": "date",
-  "info": "string"
-}
-```
 
----
 
 ## Clients API
 
@@ -117,35 +88,18 @@ Below is the comprehensive documentation for all API routes in the application. 
 
 ---
 
-## Contacts API
 
-### Endpoints
 
-| Method | URL | Description |
-|--------|-----|-------------|
-| `GET` | `/api/contacts` | Retrieve all contacts |
-| `GET` | `/api/contacts/:id` | Retrieve a specific contact by ID |
-| `POST` | `/api/contacts` | Create a new contact |
-| `PUT` | `/api/contacts/:id` | Update a contact by ID |
-| `DELETE` | `/api/contacts/:id` | Delete a contact by ID |
 
-### Parameters
 
-- `:id` - Contact ID (for GET, PUT, DELETE methods)
 
-### Request Body (POST/PUT)
 
-```json
-{
-  "client_id": "string",
-  "name": "string",
-  "email": "string",
-  "phone": "string",
-  "role": "string"
-}
-```
 
----
+
+
+
+
+
 
 ## Projects API
 
@@ -158,10 +112,8 @@ Below is the comprehensive documentation for all API routes in the application. 
 | `POST` | `/api/projects` | Create a new project |
 | `PUT` | `/api/projects/:id` | Update a project by ID |
 | `DELETE` | `/api/projects/:id` | Delete a project by ID |
-| `POST` | `/api/projects/:project_id/employees/:employee_id` | Assign an employee to a project |
-| `DELETE` | `/api/projects/:project_id/employees/:employee_id` | Remove an employee from a project |
-| `POST` | `/api/projects/:project_id/contacts/:contact_id` | Associate a contact with a project |
-| `DELETE` | `/api/projects/:project_id/contacts/:contact_id` | Remove a contact from a project |
+| `POST` | `/api/projects/:project_id/users/:user_id` | Assign a user to a project |
+| `DELETE` | `/api/projects/:project_id/users/:user_id` | Remove a user from a project |
 | `POST` | `/api/projects/:project_id/services/:service_id` | Link a service to a project |
 | `DELETE` | `/api/projects/:project_id/services/:service_id` | Unlink a service from a project |
 | `POST` | `/api/projects/:id/milestones` | Create a milestone for a project |
@@ -170,39 +122,55 @@ Below is the comprehensive documentation for all API routes in the application. 
 
 ### Parameters
 
-- `:id` - Project ID (for GET, PUT, DELETE methods)
-- `:project_id` - Project ID (for association methods)
-- `:employee_id` - Employee ID
-- `:contact_id` - Contact ID
-- `:service_id` - Service ID
+- `:id` – Project ID (used for retrieving, updating, deleting a project, or adding a milestone)
+- `:project_id` – Project ID (used for user/service associations)
+- `:user_id` – User (employee) ID
+- `:service_id` – Service ID
+- `:milestone_id` – Milestone ID (used for updating or deleting a milestone)
 
-### Request Body (POST/PUT for projects)
+### Request Body (POST/PUT for Projects)
 
 ```json
 {
   "name": "string",
   "description": "string",
-  "client_id": "integer",
-  "start_date": "date",
-  "deadline": "date",
+  "client_id": 1,
+  "start_date": "YYYY-MM-DD",
+  "deadline": "YYYY-MM-DD",
+  "status": "string",
   "overview": "string",
   "files": "string"
 }
 ```
 
-### Request Body (POST/PUT for milestones)
+### Request Body (POST/PUT for Milestones)
 
 ```json
 {
   "name": "string",
   "description": "string",
-  "date": "date",
-  "due_date": "date",
+  "date": "YYYY-MM-DD",
+  "due_date": "YYYY-MM-DD",
   "status": "string"
 }
 ```
 
 ---
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 ## Tasks API
 
@@ -224,17 +192,14 @@ Below is the comprehensive documentation for all API routes in the application. 
 
 ```json
 {
-  "type": "string",
-  "projectId": "number",
-  "contactAssigned": "number",
-  "employeeAssigned": "number",
-  "contactCompleted": "number",
-  "employeeCompleted": "number",
-  "completed": "ENUM('Y', 'N', 'C')",
-  "date": "date",
-  "dueDate": "date",
-  "taskDescription": "string",
-  "importanceLevel": "ENUM('Critical', 'High', 'Medium', 'Low', 'Optional')"
+  "type": "ENUM('note', 'task')",
+  "project_id": "number",
+  "created_by": "number",
+  "assigned_to": "number",
+  "completed_by": "number",
+  "due_date": "string (YYYY-MM-DD)",
+  "task_description": "string",
+  "importance_level": "ENUM('Critical', 'High', 'Medium', 'Low', 'Optional')"
 }
 ```
 
@@ -260,9 +225,12 @@ Below is the comprehensive documentation for all API routes in the application. 
 
 ```json
 {
-  "username": "string",
+  "name": "string",
+  "password": "string",
+  "company": "string",
+  "position": "string",
   "email": "string",
-  "password": "string"
+  "phone": "string"
 }
 ```
 

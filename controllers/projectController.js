@@ -7,178 +7,86 @@ const projectService = require('../services/projectService');
  */
 
 /**
- * Retrieves a list of projects.
- *
- * @async
  * @function getProjects
  * @memberof ProjectController
+ * @description Retrieves a list of all projects.
  * @param {Object} req - Express request object.
  * @param {Object} res - Express response object.
- * @returns {Promise<void>} Returns a Promise that resolves with the list of projects or an error message.
- * @throws {Error} An error occurred while retrieving the projects.
+ * @returns {Promise<void>}
  */
 
 /**
- * Retrieves a specific project by its unique identifier.
- *
- * @async
  * @function getProject
  * @memberof ProjectController
+ * @description Retrieves a single project by its ID.
  * @param {Object} req - Express request object.
- * @param {Object} req.params - Route parameters.
- * @param {string|number} req.params.id - The unique identifier of the project.
  * @param {Object} res - Express response object.
- * @returns {Promise<void>} Returns a Promise that resolves with the project details or an error message.
- * @throws {Error} An error occurred while retrieving the project.
+ * @returns {Promise<void>}
  */
 
 /**
- * Creates a new project.
- *
- * @async
  * @function createProject
  * @memberof ProjectController
+ * @description Creates a new project.
  * @param {Object} req - Express request object.
- * @param {Object} req.body - The request payload containing project details.
- * @param {string} req.body.name - The name of the project.
- * @param {string} req.body.description - The description of the project.
- * @param {string|number} req.body.client_id - The identifier of the client.
- * @param {string} req.body.start_date - The start date of the project.
- * @param {string} req.body.deadline - The deadline for the project.
- * @param {string} req.body.status - The current status of the project.
- * @param {string} req.body.overview - An overview of the project.
- * @param {string} req.body.files - The files associated with the project.
  * @param {Object} res - Express response object.
- * @returns {Promise<void>} Returns a Promise that resolves once the project is created or with an error message.
- * @throws {Error} An error occurred while creating the project.
+ * @returns {Promise<void>}
  */
 
 /**
- * Updates an existing project.
- *
- * @async
  * @function updateProject
  * @memberof ProjectController
+ * @description Updates an existing project by ID.
  * @param {Object} req - Express request object.
- * @param {Object} req.params - Route parameters.
- * @param {string|number} req.params.id - The unique identifier of the project to be updated.
- * @param {Object} req.body - The request payload containing updated project details.
- * @param {string} req.body.name - The updated name of the project.
- * @param {string} req.body.description - The updated description of the project.
- * @param {string|number} req.body.client_id - The identifier of the client.
- * @param {string} req.body.start_date - The updated start date of the project.
- * @param {string} req.body.deadline - The updated deadline for the project.
- * @param {string} req.body.status - The updated status of the project.
- * @param {string} req.body.overview - The updated overview of the project.
- * @param {string} req.body.files - The updated list of files associated with the project.
  * @param {Object} res - Express response object.
- * @returns {Promise<void>} Returns a Promise that resolves once the project is updated or with a 404 error if not found.
- * @throws {Error} An error occurred while updating the project.
+ * @returns {Promise<void>}
  */
 
 /**
- * Deletes a project.
- *
- * @async
  * @function deleteProject
  * @memberof ProjectController
+ * @description Deletes a project by ID.
  * @param {Object} req - Express request object.
- * @param {Object} req.params - Route parameters.
- * @param {string|number} req.params.id - The unique identifier of the project to be deleted.
  * @param {Object} res - Express response object.
- * @returns {Promise<void>} Returns a Promise that resolves once the project is deleted or with a 404 error if not found.
- * @throws {Error} An error occurred while deleting the project.
+ * @returns {Promise<void>}
  */
 
 /**
- * Assigns an employee to a project.
- *
- * @async
- * @function assignEmployeeToProject
+ * @function associateUserWithProject
  * @memberof ProjectController
+ * @description Associates a user with a project.
  * @param {Object} req - Express request object.
- * @param {Object} req.params - Route parameters.
- * @param {string|number} req.params.project_id - The unique identifier of the project.
- * @param {string|number} req.params.employee_id - The unique identifier of the employee to assign.
  * @param {Object} res - Express response object.
- * @returns {Promise<void>} Returns a Promise that resolves with the result of the assignment operation.
- * @throws {Error} An error occurred while assigning the employee to the project.
+ * @returns {Promise<void>}
  */
 
 /**
- * Removes an employee from a project.
- *
- * @async
- * @function removeEmployeeFromProject
+ * @function removeUserFromProject
  * @memberof ProjectController
+ * @description Removes a user from a project.
  * @param {Object} req - Express request object.
- * @param {Object} req.params - Route parameters.
- * @param {string|number} req.params.project_id - The unique identifier of the project.
- * @param {string|number} req.params.employee_id - The unique identifier of the employee to remove.
  * @param {Object} res - Express response object.
- * @returns {Promise<void>} Returns a Promise that resolves with the result of the removal operation.
- * @throws {Error} An error occurred while removing the employee from the project.
+ * @returns {Promise<void>}
  */
 
 /**
- * Associates a contact with a project.
- *
- * @async
- * @function associateContactWithProject
- * @memberof ProjectController
- * @param {Object} req - Express request object.
- * @param {Object} req.params - Route parameters.
- * @param {string|number} req.params.project_id - The unique identifier of the project.
- * @param {string|number} req.params.contact_id - The unique identifier of the contact to associate.
- * @param {Object} res - Express response object.
- * @returns {Promise<void>} Returns a Promise that resolves with the result of the association operation.
- * @throws {Error} An error occurred while associating the contact with the project.
- */
-
-/**
- * Removes a contact from a project.
- *
- * @async
- * @function removeContactFromProject
- * @memberof ProjectController
- * @param {Object} req - Express request object.
- * @param {Object} req.params - Route parameters.
- * @param {string|number} req.params.project_id - The unique identifier of the project.
- * @param {string|number} req.params.contact_id - The unique identifier of the contact to remove.
- * @param {Object} res - Express response object.
- * @returns {Promise<void>} Returns a Promise that resolves with the result of the removal operation.
- * @throws {Error} An error occurred while removing the contact from the project.
- */
-
-/**
- * Links a service to a project.
- *
- * @async
  * @function linkServiceToProject
  * @memberof ProjectController
+ * @description Links a service to a project.
  * @param {Object} req - Express request object.
- * @param {Object} req.params - Route parameters.
- * @param {string|number} req.params.project_id - The unique identifier of the project.
- * @param {string|number} req.params.service_id - The unique identifier of the service to link.
  * @param {Object} res - Express response object.
- * @returns {Promise<void>} Returns a Promise that resolves with the result of the linking operation.
- * @throws {Error} An error occurred while linking the service to the project.
+ * @returns {Promise<void>}
  */
 
 /**
- * Unlinks a service from a project.
- *
- * @async
  * @function unlinkServiceFromProject
  * @memberof ProjectController
+ * @description Unlinks a service from a project.
  * @param {Object} req - Express request object.
- * @param {Object} req.params - Route parameters.
- * @param {string|number} req.params.project_id - The unique identifier of the project.
- * @param {string|number} req.params.service_id - The unique identifier of the service to unlink.
  * @param {Object} res - Express response object.
- * @returns {Promise<void>} Returns a Promise that resolves with the result of the unlinking operation.
- * @throws {Error} An error occurred while unlinking the service from the project.
+ * @returns {Promise<void>}
  */
+
 
 
 class ProjectController {
@@ -241,43 +149,23 @@ class ProjectController {
         }
     }
 
-    static async assignEmployeeToProject(req, res) {
+    static async associateUserWithProject(req, res) {
         try {
-            const { project_id, employee_id } = req.params;
-            const result = await projectService.assignEmployeeToProject(project_id, employee_id);
+            const { project_id, user_id } = req.params;
+            const result = await projectService.associateUserWithProject(project_id, user_id);
             res.status(200).json(result);
         } catch (error) {
-            res.status(500).json({ error: 'An error occurred while assigning the employee to the project' });
+            res.status(500).json({ error: 'An error occurred while associating the user with the project' });
         }
     }
 
-    static async removeEmployeeFromProject(req, res) {
+    static async removeUserFromProject(req, res) {
         try {
-            const { project_id, employee_id } = req.params;
-            const result = await projectService.removeEmployeeFromProject(project_id, employee_id);
+            const { project_id, user_id } = req.params;
+            const result = await projectService.removeUserFromProject(project_id, user_id);
             res.status(200).json(result);
         } catch (error) {
-            res.status(500).json({ error: 'An error occurred while removing the employee from the project' });
-        }
-    }
-
-    static async associateContactWithProject(req, res) {
-        try {
-            const { project_id, contact_id } = req.params;
-            const result = await projectService.associateContactWithProject(project_id, contact_id);
-            res.status(200).json(result);
-        } catch (error) {
-            res.status(500).json({ error: 'An error occurred while associating the contact with the project' });
-        }
-    }
-
-    static async removeContactFromProject(req, res) {
-        try {
-            const { project_id, contact_id } = req.params;
-            const result = await projectService.removeContactFromProject(project_id, contact_id);
-            res.status(200).json(result);
-        } catch (error) {
-            res.status(500).json({ error: 'An error occurred while removing the contact from the project' });
+            res.status(500).json({ error: 'An error occurred while removing the user from the project' });
         }
     }
 

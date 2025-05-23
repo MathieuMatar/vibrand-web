@@ -7,128 +7,111 @@ const { validateMilestone } = require('../validators/milestoneDTO');
 const router = express.Router();
 
 /**
-GET /api/projects
-Retrieves all projects from the database.
-
-GET /api/projects/:id
-Retrieves a specific project by ID.
-@param {string} id - Project ID
-
-POST /api/projects
-Creates a new project.
-Request body:
-{
-    name: string,
-    description: string,
-    client_id: int,
-    start_date: date,
-    deadline: date,
-    status: string,
-    overview: string,
-    files: string
-}
-
-PUT /api/projects/:id
-Updates an existing project by ID.
-@param {string} id - Project ID
-{
-    name: string,
-    description: string,
-    client_id: int,
-    start_date: date,
-    deadline: date,
-    status: string,
-    overview: string,
-    files: string
-}
-
-DELETE /api/projects/:id
-Deletes a project by ID.
-@param {string} id - Project ID
-
-
-
-POST /api/projects/:project_id/employees/:employee_id
-Assigns an employee to a project.
-@param {string} project_id - Project ID
-@param {string} employee_id - Employee ID
-
-DELETE /api/projects/:project_id/employees/:employee_id
-Unassigns an employee from a project.
-@param {string} project_id - Project ID
-@param {string} employee_id - Employee ID
-
-POST /api/projects/:project_id/contacts/:contact_id
-Associates a contact with a project.
-@param {string} project_id - Project ID
-@param {string} contact_id - Contact ID
-
-DELETE /api/projects/:project_id/contacts/:contact_id
-Removes a contact from a project.
-@param {string} project_id - Project ID
-@param {string} contact_id - Contact ID
-
-POST /api/projects/:project_id/services/:service_id
-Links a service to a project.
-@param {string} project_id - Project ID
-@param {string} service_id - Service ID
-
-DELETE /api/projects/:project_id/services/:service_id
-Unlinks a service from a project.
-@param {string} project_id - Project ID
-@param {string} service_id - Service ID
-
-POST /api/projects/:id/milestones
-Creates a new milestone for a project.
-@param {string} id - Project ID
-{
-    name: string,
-    description: string,
-    date: date,
-    due_date: date,
-    status: string
-}
-
-PUT /api/projects/milestones/:id
-Updates an existing milestone.
-@param {string} id - Milestone ID
-{
-    project_id: int,
-    name: string,
-    description: string,
-    date: date,
-    due_date: date,
-    status: string
-}
-
-DELETE /api/projects/milestones/:id
-Deletes a milestone.
-@param {string} id - Milestone ID
-
-
-
-
-*/
-
+ * @route GET /api/projects
+ * @description Retrieves all projects
+ * @returns {Array<Object>} 200 - List of projects
+ */
 router.get('/', projectController.getProjects);
+
+/**
+ * @route POST /api/projects
+ * @description Creates a new project
+ * @body {string} name
+ * @body {string} description
+ * @body {int} client_id
+ * @body {string} start_date - ISO date
+ * @body {string} deadline - ISO date
+ * @body {string} status
+ * @body {string} overview
+ * @body {string} files
+ * @returns {Object} 201 - Created project
+ */
 router.post('/', validateProject, projectController.createProject);
-router.get('/:id',validateProjectId, projectController.getProject);
-router.delete('/:id',validateProjectId,  projectController.deleteProject);
+
+/**
+ * @route GET /api/projects/:id
+ * @description Retrieves a project by ID
+ * @param {string} id.path.required - Project ID
+ */
+router.get('/:id', validateProjectId, projectController.getProject);
+
+/**
+ * @route DELETE /api/projects/:id
+ * @description Deletes a project by ID
+ * @param {string} id.path.required - Project ID
+ */
+router.delete('/:id', validateProjectId, projectController.deleteProject);
+
+/**
+ * @route PUT /api/projects/:id
+ * @description Updates a project by ID
+ * @param {string} id.path.required - Project ID
+ * @body Same as POST /api/projects
+ */
 router.put('/:id', validateProjectId, projectController.updateProject);
 
+/**
+ * @route POST /api/projects/:project_id/users/:user_id
+ * @description Assigns a user (employee) to a project
+ * @param {string} project_id.path.required
+ * @param {string} user_id.path.required
+ */
+router.post('/:project_id/users/:user_id', projectController.associateUserWithProject);
 
-router.post('/:project_id/employees/:employee_id', projectController.assignEmployeeToProject);
-router.delete('/:project_id/employees/:employee_id', projectController.removeEmployeeFromProject);
-router.post('/:project_id/contacts/:contact_id', projectController.associateContactWithProject);
-router.delete('/:project_id/contacts/:contact_id', projectController.removeContactFromProject);
+/**
+ * @route DELETE /api/projects/:project_id/users/:user_id
+ * @description Unassigns a user (employee) from a project
+ * @param {string} project_id.path.required
+ * @param {string} user_id.path.required
+ */
+router.delete('/:project_id/users/:user_id', projectController.removeUserFromProject);
+
+/**
+ * @route POST /api/projects/:project_id/services/:service_id
+ * @description Links a service to a project
+ * @param {string} project_id.path.required
+ * @param {string} service_id.path.required
+ */
 router.post('/:project_id/services/:service_id', projectController.linkServiceToProject);
+
+/**
+ * @route DELETE /api/projects/:project_id/services/:service_id
+ * @description Unlinks a service from a project
+ * @param {string} project_id.path.required
+ * @param {string} service_id.path.required
+ */
 router.delete('/:project_id/services/:service_id', projectController.unlinkServiceFromProject);
 
-
-//project id
+/**
+ * @route POST /api/projects/:id/milestones
+ * @description Creates a milestone for a project
+ * @param {string} id.path.required - Project ID
+ * @body {string} name
+ * @body {string} description
+ * @body {string} date - ISO date
+ * @body {string} due_date - ISO date
+ * @body {string} status
+ */
 router.post('/:id/milestones', validateMilestone, milestoneController.createMilestone);
+
+/**
+ * @route PUT /api/projects/milestones/:id
+ * @description Updates a milestone
+ * @param {string} id.path.required - Milestone ID
+ * @body {int} project_id
+ * @body {string} name
+ * @body {string} description
+ * @body {string} date - ISO date
+ * @body {string} due_date - ISO date
+ * @body {string} status
+ */
 router.put('/milestones/:id', milestoneController.updateMilestone);
+
+/**
+ * @route DELETE /api/projects/milestones/:id
+ * @description Deletes a milestone
+ * @param {string} id.path.required - Milestone ID
+ */
 router.delete('/milestones/:id', milestoneController.deleteMilestone);
 
 module.exports = router;
-

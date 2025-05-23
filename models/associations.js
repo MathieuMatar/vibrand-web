@@ -10,8 +10,8 @@ const Client = require('./Client');
 
 //User.hasMany(Order, {foreignKey: 'user_id', onDelete: 'CASCADE'});
 //Order.belongsTo(User, {foreignKey: 'user_id'});
-Project.belongsToMany(Employee, { through: 'ProjectEmployee' });
-Employee.belongsToMany(Project, { through: 'ProjectEmployee' });
+//Project.belongsToMany(Employee, { through: 'ProjectEmployee' });
+//Employee.belongsToMany(Project, { through: 'ProjectEmployee' });
 
 /*contact and project many to many
 Contact.belongsToMany(Project, { through: 'ProjectContact' });
@@ -22,8 +22,9 @@ Project.belongsToMany(Service, { through: 'ProjectService' });
 Service.belongsToMany(Project, { through: 'ProjectService' });
 
 //user project many to many
-User.belongsToMany(Project, { through: 'UserProject' });
 Project.belongsToMany(User, { through: 'UserProject' });
+User.belongsToMany(Project, { through: 'UserProject' });
+
 
 
 //milestoner belongs to project
