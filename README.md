@@ -9,6 +9,7 @@ Below is the comprehensive documentation for all API routes in the application. 
 
 ## Table of Contents
 
+- [Website Views](#website-views)
 - [Services API](#services-api)
 - [Clients API](#clients-api)
 - [Projects API](#projects-api)
@@ -19,6 +20,34 @@ Below is the comprehensive documentation for all API routes in the application. 
 - [Technologies Used](#technologies-used)
 
 ---
+
+## Website Views
+### Public Views
+
+| Method | URL | Description |
+|--------|-----|-------------|
+| `GET` | `/` | Home page |
+| `GET` | `/projects` | Projects showcase |
+| `GET` | `/clients` | Client testimonials |
+| `GET` | `/services` | Services offered |
+| `GET` | `/sacredbranding` | Sacred branding |
+| `GET` | `/login` | Login form |
+
+All these pages are dinamic in the homepage with transitions
+
+### User Views (after login)
+
+Here the user can his projects and info about them and add and edit related tasks
+!!Authentication is not yet implemented!!
+
+### Admin View
+
+| Method | URL | Description |
+|--------|-----|-------------|
+| `GET` | `/main` | Admin dashboard |
+
+here the main admin can see all the tables and edit and add to them, this will in thwe future be replaced with a Content Management System (CMS) for he final product.
+!!Authentication is not yet implemented!!
 
 ## Services API
 
@@ -248,7 +277,7 @@ The server runs on the port specified in the `.env` file. All endpoints follow R
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/MathieuMatar/webProjectWithSequelize.git
+   git clone https://github.com/MathieuMatar/vibrand-web.git
    ```
 
 2. Install dependencies:
@@ -284,6 +313,8 @@ The server runs on the port specified in the `.env` file. All endpoints follow R
    npm run dev
    ```
 
+7. Access the application at `http://localhost:3002` and use username Mathieu and password Mathieu to login to the test view with most data.
+
 ---
 
 ## Technologies Used
@@ -294,5 +325,16 @@ The server runs on the port specified in the `.env` file. All endpoints follow R
 - **Sequelize / Raw SQL** – ORM or query method
 - **dotenv** – Environment config
 - **Postman** – API testing (optional)
+- **Nodemon** – Development tool for auto-restarting the server
+- **CORS** – Cross-Origin Resource Sharing
+- **EJS** – Templating engine
+- **CSS** – Stylesheet language
+- **Bootstrap** – CSS framework (for /main)
+
 
 ---
+
+add remark
+
+## Note
+- Please note most data is random and AI generate, the chatbot was given the list of names of the used images and it generated the rest randomly accordingly.

@@ -67,7 +67,8 @@ class ViewsController {
             const task2 = await TaskService.createTask(null, project, user, null, null, null, null, null);
             const newId = task2.id;
             const task = await TaskService.readTask(newId);
-            res.render('admin/task', { task, user, project });
+            const users = await UserService.readUsers();
+            res.render('admin/task', { task, user, project, users });
             //res.render('admin/task', { task, user, project });
         } catch (error) {
             console.error('Error rendering new task:', error);
@@ -95,7 +96,7 @@ class ViewsController {
                 return (a.completed_by ? 1 : 0) - (b.completed_by ? 1 : 0);
             });
 
-            const projectId = null;
+            const projectId = 1;
 
             res.render('admin/user-task', { tasks, id, projectId });
         } catch (error) {
