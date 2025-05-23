@@ -120,13 +120,7 @@
             <td><input type="email" name="email" value="<%= client.email %>" class="form-control edit-field" disabled></td>
             <td><input type="text" name="phone" value="<%= client.phone %>" class="form-control edit-field" disabled></td>
             <td><input type="text" name="address" value="<%= client.address %>" class="form-control edit-field" disabled></td>
-            <td>
-              <select name="client_type" class="form-select edit-field" disabled>
-                <option value="Corporate" <%= client.client_type === 'Corporate' ? 'selected' : '' %>>Corporate</option>
-                <option value="Individual" <%= client.client_type === 'Individual' ? 'selected' : '' %>>Individual</option>
-                <option value="Government" <%= client.client_type === 'Government' ? 'selected' : '' %>>Government</option>
-              </select>
-            </td>
+            <td><input type="text" name="client_type" value="<%= client.client_type %>" class="form-control edit-field" disabled></td>
             <td>
               <div class="d-flex justify-content-center gap-2 flex-wrap">
                 <button type="button" class="btn btn-sm btn-warning update-btn" onclick="toggleEditMode(this, true)">Edit</button>
@@ -156,11 +150,7 @@
               <input type="text" name="address" placeholder="Address" required class="form-control">
             </td>
             <td>
-              <select name="client_type" class="form-select" required>
-                <option value="Corporate" selected>Corporate</option>
-                <option value="Individual">Individual</option>
-                <option value="Government">Government</option>
-              </select>
+              <input type="text" name="client_type" placeholder="Client Type" class="form-control">
             </td>
             <td>
               <button type="submit" class="btn btn-success">Add Client</button>
